@@ -4,15 +4,15 @@ variable "token" {
   type        = string
 }
 
-# root password to be set on linodes
-variable "instance_root_password" {
-  description = "root password to be set on linodes"
+# ubuntu password to be set on linodes
+variable "instance_ubuntu_password" {
+  description = "ubuntu password to be set on linodes"
   type        = string
 }
 
-# root ssh key to be authorized on all linodes
-variable "instance_root_ssh_key" {
-  description = "root ssh key to be authorized on all linodes"
+# ssh key to be authorized for user ubuntu access on all linodes
+variable "access_ssh_key" {
+  description = "ssh key to be authorized for user ubuntu access on all linodes"
   type        = string
 }
 
