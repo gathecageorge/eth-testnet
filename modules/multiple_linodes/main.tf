@@ -10,7 +10,8 @@ resource "linode_instance" "instances" {
 
   provisioner "remote-exec" {
     inline = [
-      "useradd ubuntu -m -d /home/ubuntu -p $(openssl passwd -crypt ${var.instance_ubuntu_password})",
+      "useradd ubuntu -m -d /home/ubuntu",
+      "echo ubuntu:${var.instance_ubuntu_password} | chpasswd",
       "usermod -aG sudo ubuntu",
       "mkdir -p /home/ubuntu/.ssh",
       "mv /root/.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys",

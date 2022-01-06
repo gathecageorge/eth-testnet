@@ -10,12 +10,12 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  instance_group         = each.key
-  number_instances       = each.value.count
-  instance_image         = each.value.image
-  instance_regions       = each.value.regions
-  instance_type          = each.value.type
-  access_ssh_key         = linode_sshkey.ubuntu_user_ssh_access_key.ssh_key
+  instance_group           = each.key
+  number_instances         = each.value.count
+  instance_image           = each.value.image
+  instance_regions         = each.value.regions
+  instance_type            = each.value.type
+  access_ssh_key           = linode_sshkey.ubuntu_user_ssh_access_key.ssh_key
   instance_ubuntu_password = var.instance_ubuntu_password
 }
 
