@@ -27,3 +27,14 @@ output "all_instances_server_ips" {
     key => module.multiple_linodes_instances[key].server_ips
   }
 }
+
+# generate inventory file for Ansible
+resource "local_file" "inventory" {
+  filename = "./ansible/inventory.cfg"
+  content = templatefile("./templates/inventory.tftpl", { 
+    servers = {
+      for key in keys(var.instance_types) :
+        key => module.multiple_linodes_instances[key].server_ips
+    }
+  })
+}
