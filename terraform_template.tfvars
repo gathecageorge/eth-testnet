@@ -9,8 +9,8 @@ access_ssh_key = ""
 
 # instances/machines to create, different configurations
 instance_types = {
-  lighthouse = { count = 8, type = "g6-linode-8", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
-  teku       = { count = 8, type = "g6-linode-16", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
-  prysm      = { count = 8, type = "g6-linode-8", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
-  nimbus     = { count = 8, type = "g6-linode-8", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] }
+  lighthouse = { count = 8, type = "g6-standard-2", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
+  teku       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
+  prysm      = { count = 8, type = "g6-standard-2", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] },
+  nimbus     = { count = 8, type = "g6-standard-2", image = "linode/ubuntu20.04", regions = ["us-west", "us-east"] }
 }

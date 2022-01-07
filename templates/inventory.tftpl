@@ -11,10 +11,30 @@ ${servername}
 %{ endfor ~}
 %{ endfor ~}
 
+[beacon]
 %{ for key, value in servers ~}
-[${key}]
 %{ for servername, ip_address in value ~}
 ${servername}
 %{ endfor ~}
+%{ endfor ~}
 
+[validator]
+%{ for key, value in servers ~}
+%{ for servername, ip_address in value ~}
+${servername}
+%{ endfor ~}
+%{ endfor ~}
+
+%{ for key, value in servers ~}
+[eth2client_${key}]
+%{ for servername, ip_address in value ~}
+${servername}
+%{ endfor }
+%{ endfor ~}
+
+[Eth2_Testnets]
+%{ for key, value in servers ~}
+%{ for servername, ip_address in value ~}
+${servername}
+%{ endfor ~}
 %{ endfor ~}
