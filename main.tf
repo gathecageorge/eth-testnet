@@ -10,12 +10,12 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  instance_group         = each.key
-  number_instances       = each.value.count
-  instance_image         = each.value.image
-  instance_regions       = each.value.regions
-  instance_type          = each.value.type
-  access_ssh_key         = linode_sshkey.ubuntu_user_ssh_access_key.ssh_key
+  instance_group           = each.key
+  number_instances         = each.value.count
+  instance_image           = each.value.image
+  instance_regions         = each.value.regions
+  instance_type            = each.value.type
+  access_ssh_key           = linode_sshkey.ubuntu_user_ssh_access_key.ssh_key
   instance_ubuntu_password = var.instance_ubuntu_password
 }
 
@@ -26,4 +26,15 @@ output "all_instances_server_ips" {
     for key in keys(var.instance_types) :
     key => module.multiple_linodes_instances[key].server_ips
   }
+}
+
+# generate inventory file for Ansible
+resource "local_file" "inventory" {
+  filename = "./ansible/inventory.cfg"
+  content = templatefile("./templates/inventory.tftpl", { 
+    servers = {
+      for key in keys(var.instance_types) :
+        key => module.multiple_linodes_instances[key].server_ips
+    }
+  })
 }

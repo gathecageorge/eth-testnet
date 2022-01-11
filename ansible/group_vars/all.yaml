@@ -1,0 +1,19 @@
+##############################################
+# generic ansible config information
+##############################################
+ansible_user: "ubuntu"
+ansible_python_interpreter: /usr/bin/python3
+
+##############################################
+# container names
+##############################################
+beacon_container_name: beacon
+validator_container_name: validator
+
+##############################################
+# remote host data directories
+##############################################
+home_dir: "/home/{{ ansible_user }}"
+beacon_node_dir: "{{home_dir}}/beacon"
+validator_node_dir: "{{home_dir}}/validator"
+testnet_dir: "{{home_dir}}/custom_config_data"
