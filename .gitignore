@@ -3,4 +3,4 @@
 **/terraform.tfvars
 **/backend.conf
 **/.DS_Store
-**/ansible/inventory.cfg
+**/ansible/inventory.ini
