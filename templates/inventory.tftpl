@@ -31,10 +31,3 @@ ${servername}
 ${servername}
 %{ endfor }
 %{ endfor ~}
-
-[Eth2_Testnets]
-%{ for key, value in servers ~}
-%{ for servername, ip_address in value ~}
-${servername}
-%{ endfor ~}
-%{ endfor ~}
