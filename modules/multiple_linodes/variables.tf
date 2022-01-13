@@ -23,9 +23,9 @@ variable "instance_ubuntu_password" {
   type        = string
 }
 
-variable "access_ssh_key" {
-  description = "What ssh key to be authorized for user ubuntu access on all linodes"
-  type        = string
+variable "access_ssh_keys_array" {
+  description = "What ssh keys to be authorized for user ubuntu access on all linodes"
+  type        = list(string)
 }
 
 variable "instance_group" {

@@ -6,7 +6,7 @@ resource "linode_instance" "instances" {
   region          = element(var.instance_regions, count.index)
   type            = var.instance_type
   root_pass       = var.instance_ubuntu_password
-  authorized_keys = [var.access_ssh_key]
+  authorized_keys = var.access_ssh_keys_array
 
   provisioner "remote-exec" {
     inline = [

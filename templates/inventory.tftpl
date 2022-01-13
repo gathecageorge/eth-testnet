@@ -13,20 +13,28 @@ ${servername}
 
 [beacon]
 %{ for key, value in servers ~}
+%{ if key != "eth1" ~}
 %{ for servername, ip_address in value ~}
 ${servername}
 %{ endfor ~}
+%{ endif ~}
 %{ endfor ~}
 
 [validator]
 %{ for key, value in servers ~}
+%{ if key != "eth1" ~}
 %{ for servername, ip_address in value ~}
 ${servername}
 %{ endfor ~}
+%{ endif ~}
 %{ endfor ~}
 
 %{ for key, value in servers ~}
+%{ if key != "eth1" ~}
 [eth2client_${key}]
+%{ else ~}
+[${key}]
+%{ endif ~}
 %{ for servername, ip_address in value ~}
 ${servername}
 %{ endfor }
