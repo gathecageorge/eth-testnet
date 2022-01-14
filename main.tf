@@ -21,6 +21,10 @@ module "multiple_linodes_instances" {
   instance_ubuntu_password = var.instance_ubuntu_password
 }
 
+output "total_ssh_keys" {
+  value = length(linode_sshkey.ssh_access_keys)
+}
+
 # output ips of all created instances
 output "all_instances_server_ips" {
   description = "All servers ip addresses"

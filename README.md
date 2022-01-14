@@ -13,12 +13,18 @@ Automated testnet deploy on Linode
 
 ## Initialize project
 
-terraform init -backend-config=backend.conf
+`terraform init -backend-config=backend.conf`
 
 ## Run Project
 
-terraform apply
+Run this to create nodes first
+
+`terraform apply -target=module.multiple_linodes_instances`
+
+Run to complete creating firewalls
+
+`terraform apply`
 
 ## Delete all Project resources
 
-terraform destroy
+`terraform destroy`
