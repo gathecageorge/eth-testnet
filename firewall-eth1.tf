@@ -1,8 +1,8 @@
 resource "linode_firewall" "eth1_firewalls" {
   for_each = {
-    for node in data.linode_instances.all_nodes.instances:
-      node.label => { id: node.id, region: node.region, ip_address: node.ip_address }
-      if contains(node.tags, "eth1")
+    for node in data.linode_instances.all_nodes.instances :
+    node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
+    if contains(node.tags, "eth1")
   }
 
   label = "${each.key}_firewall"
@@ -40,12 +40,12 @@ resource "linode_firewall" "eth1_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "8545"
-    ipv4     = [
-      for node in data.linode_instances.all_nodes.instances:
-        "${node.ip_address}/32"
-        if node.region == each.value.region && node.label != each.key
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "use_${each.key}")
     ]
-    ipv6     = []
+    ipv6 = []
   }
 
   inbound {
@@ -53,15 +53,15 @@ resource "linode_firewall" "eth1_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "8546"
-    ipv4     = [
-      for node in data.linode_instances.all_nodes.instances:
-        "${node.ip_address}/32"
-        if node.region == each.value.region && node.label != each.key
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "use_${each.key}")
     ]
-    ipv6     = []
+    ipv6 = []
   }
 
-  inbound_policy = "DROP"
+  inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
 
   linodes = [each.value.id]

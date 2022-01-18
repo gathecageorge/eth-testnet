@@ -1,6 +1,6 @@
-resource "linode_firewall" "others_firewalls" {
-  label = "others_firewall"
-  tags  = ["others"]
+resource "linode_firewall" "global_federation_firewalls" {
+  label = "global_federation_firewall"
+  tags  = ["global_federation"]
 
   inbound {
     label    = "allow-ssh"
@@ -12,19 +12,19 @@ resource "linode_firewall" "others_firewalls" {
   }
 
   inbound {
-    label    = "allow-beacon"
+    label    = "allow-grafana"
     action   = "ACCEPT"
     protocol = "TCP"
-    ports    = "9000"
+    ports    = "3000"
     ipv4     = ["0.0.0.0/0"]
     ipv6     = ["::/0"]
   }
 
   inbound {
-    label    = "allow-beacon-udp"
+    label    = "allow-prometheus"
     action   = "ACCEPT"
-    protocol = "UDP"
-    ports    = "9000"
+    protocol = "TCP"
+    ports    = "9090"
     ipv4     = ["0.0.0.0/0"]
     ipv6     = ["::/0"]
   }
@@ -35,7 +35,7 @@ resource "linode_firewall" "others_firewalls" {
   linodes = [
     for node in data.linode_instances.all_nodes.instances :
     node.id
-    if contains(node.tags, "others")
+    if contains(node.tags, "global_federation")
   ]
 
   depends_on = [

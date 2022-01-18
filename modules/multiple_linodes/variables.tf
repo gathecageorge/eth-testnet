@@ -3,6 +3,16 @@ variable "number_instances" {
   type        = number
 }
 
+variable "total_eth1" {
+  description = "How many eth1 instances"
+  type        = number
+}
+
+variable "total_global_federation" {
+  description = "How many global federation instances"
+  type        = number
+}
+
 variable "instance_image" {
   description = "What OS image to use for the instances"
   type        = string

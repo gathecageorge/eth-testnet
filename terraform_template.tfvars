@@ -15,7 +15,9 @@ access_ssh_keys = {
 
 # instances/machines to create, different configurations
 instance_types = {
-  eth1       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04" },
+  eth1              = { count = 2, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  global_federation = { count = 2, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+
   lighthouse = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
   teku       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04" },
   prysm      = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
