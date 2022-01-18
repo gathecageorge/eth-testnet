@@ -12,7 +12,8 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  instance_group           = each.key
+  instance_group           = var.instance_group
+  instance_label           = each.key
   number_instances         = each.value.count
   instance_image           = each.value.image
   instance_regions         = var.dc_regions

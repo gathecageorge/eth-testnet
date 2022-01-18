@@ -1,18 +1,8 @@
-data "linode_instances" "all_nodes" {
-  depends_on = [
-    module.multiple_linodes_instances,
-  ]
-}
-
-output "total_nodes" {
-  value = length(data.linode_instances.all_nodes.instances)
-}
-
 resource "linode_firewall" "eth1_firewalls" {
   for_each = {
     for node in data.linode_instances.all_nodes.instances:
       node.label => { id: node.id, region: node.region, ip_address: node.ip_address }
-      if node.group == "eth1"
+      if contains(node.tags, "eth1")
   }
 
   label = "${each.key}_firewall"
@@ -23,6 +13,24 @@ resource "linode_firewall" "eth1_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "22"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-go-ethereum"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "30303"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-go-ethereum-udp"
+    action   = "ACCEPT"
+    protocol = "UDP"
+    ports    = "30303"
     ipv4     = ["0.0.0.0/0"]
     ipv6     = ["::/0"]
   }

@@ -10,6 +10,12 @@ variable "instance_ubuntu_password" {
   type        = string
 }
 
+# Group for all linodes deployed using this terraform for differentiation
+variable "instance_group" {
+  description = "Group for all linodes deployed using this terraform for differentiation"
+  type        = string
+}
+
 # ssh keys to be authorized for user ubuntu access on all linodes
 variable "access_ssh_keys" {
   description = "ssh keys to be authorized for user ubuntu access on all linodes"

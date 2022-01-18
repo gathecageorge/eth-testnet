@@ -28,7 +28,13 @@ variable "access_ssh_keys_array" {
   type        = list(string)
 }
 
+variable "instance_label" {
+  description = "What is the label name for this instances"
+  type        = string
+}
+
+# Group for all linodes deployed using this terraform for differentiation
 variable "instance_group" {
-  description = "What is the group name for this instances"
+  description = "Group for all linodes deployed using this terraform for differentiation"
   type        = string
 }

@@ -1,7 +1,7 @@
 resource "linode_instance" "instances" {
   count = var.number_instances
 
-  label           = "${var.instance_group}-${count.index}"
+  label           = "${var.instance_label}-${count.index}"
   image           = var.instance_image
   region          = element(var.instance_regions, count.index)
   type            = var.instance_type
@@ -31,6 +31,6 @@ resource "linode_instance" "instances" {
   }
 
   group      = var.instance_group
-  tags       = [var.instance_group]
+  tags       = [var.instance_label]
   private_ip = true
 }

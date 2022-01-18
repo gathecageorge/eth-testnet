@@ -25,6 +25,10 @@ Run to complete creating firewalls
 
 `terraform apply`
 
+One command to create all
+
+`terraform apply -target=module.multiple_linodes_instances && terraform apply`
+
 ## Delete all Project resources
 
 `terraform destroy`
