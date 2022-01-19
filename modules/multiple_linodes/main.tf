@@ -31,11 +31,18 @@ resource "linode_instance" "instances" {
   }
 
   group = var.instance_group
-  tags = var.instance_label == "eth1" || var.instance_label == "global_federation" ? [var.instance_label] : [
-    var.instance_label,
-    "others",
-    "use_eth1-${count.index % var.total_eth1}",
-    "use_global_federation-${count.index % var.total_global_federation}"
-  ]
+  tags = (var.instance_label == "global_federation") ? [var.instance_label] : (
+    (var.instance_label == "eth1") ? [var.instance_label, "use_dc_local-${count.index % var.total_dc_local}"] : (
+      (var.instance_label == "dc_local") ? [var.instance_label, "use_global_federation-${count.index % var.total_global_federation}"] : (
+        [
+          var.instance_label,
+          "others",
+          "use_eth1-${count.index % var.total_eth1}",
+          "use_dc_local-${count.index % var.total_dc_local}",
+        ]
+      )
+    )
+  )
+
   private_ip = true
 }

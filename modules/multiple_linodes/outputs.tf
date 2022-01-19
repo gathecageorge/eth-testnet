@@ -9,6 +9,11 @@ output "servers_information" {
         tag
         if length(regexall(".*eth1.*", tag)) == 1
       ],
+      dc_local = [
+        for tag in instance.tags :
+        tag
+        if length(regexall(".*local.*", tag)) == 1
+      ],
       global_federation = [
         for tag in instance.tags :
         tag

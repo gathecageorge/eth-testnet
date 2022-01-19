@@ -8,6 +8,11 @@ variable "total_eth1" {
   type        = number
 }
 
+variable "total_dc_local" {
+  description = "How many dc local logging instances"
+  type        = number
+}
+
 variable "total_global_federation" {
   description = "How many global federation instances"
   type        = number

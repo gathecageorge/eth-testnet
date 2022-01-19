@@ -13,6 +13,7 @@ module "multiple_linodes_instances" {
   for_each = var.instance_types
 
   total_eth1              = lookup(var.instance_types, "eth1", { count = 0, type = "", image = "" }).count
+  total_dc_local          = lookup(var.instance_types, "dc_local", { count = 0, type = "", image = "" }).count
   total_global_federation = lookup(var.instance_types, "global_federation", { count = 0, type = "", image = "" }).count
 
   instance_group           = var.instance_group
@@ -29,6 +30,14 @@ output "total_ssh_keys" {
   value = length(linode_sshkey.ssh_access_keys)
 }
 
+output "all_instances_information" {
+  description = "All servers information"
+  value = {
+    for key in keys(var.instance_types) :
+    key => module.multiple_linodes_instances[key].*
+  }
+}
+
 # generate inventory file for Ansible
 resource "local_file" "inventory" {
   filename = "./ansible/inventory.ini"
@@ -40,6 +49,7 @@ resource "local_file" "inventory" {
         servername => {
           ip                = data.ip,
           eth1              = length(data.eth1) == 0 ? "" : replace(data.eth1[0], "use_", ""),
+          dc_local          = length(data.dc_local) == 0 ? "" : replace(data.dc_local[0], "use_", ""),
           global_federation = length(data.global_federation) == 0 ? "" : replace(data.global_federation[0], "use_", "")
         }
       }

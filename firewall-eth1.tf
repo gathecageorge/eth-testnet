@@ -18,6 +18,14 @@ resource "linode_firewall" "eth1_firewalls" {
   }
 
   inbound {
+    label    = "allow-node-metric"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "9100"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+  inbound {
     label    = "allow-go-ethereum"
     action   = "ACCEPT"
     protocol = "TCP"

@@ -29,6 +29,33 @@ resource "linode_firewall" "others_firewalls" {
     ipv6     = ["::/0"]
   }
 
+  inbound {
+    label    = "allow-validator-metric"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "8001"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-beacon-metric"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "8000"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-node-metric"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "9100"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
 
