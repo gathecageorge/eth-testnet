@@ -12,7 +12,7 @@ resource "linode_firewall" "others_firewalls" {
   }
 
   inbound {
-    label    = "allow-beacon"
+    label    = "allow-beacon-tcp"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "9000"
@@ -25,33 +25,6 @@ resource "linode_firewall" "others_firewalls" {
     action   = "ACCEPT"
     protocol = "UDP"
     ports    = "9000"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-validator-metric"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "8001"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-beacon-metric"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "8000"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-node-metric"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "9100"
     ipv4     = ["0.0.0.0/0"]
     ipv6     = ["::/0"]
   }

@@ -18,15 +18,7 @@ resource "linode_firewall" "eth1_firewalls" {
   }
 
   inbound {
-    label    = "allow-node-metric"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "9100"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-  inbound {
-    label    = "allow-go-ethereum"
+    label    = "allow-go-ethereum-tcp"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "30303"
@@ -51,7 +43,7 @@ resource "linode_firewall" "eth1_firewalls" {
     ipv4 = [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
-      if contains(node.tags, "use_${each.key}")
+      if contains(node.tags, "geth_${each.key}")
     ]
     ipv6 = []
   }
@@ -64,7 +56,7 @@ resource "linode_firewall" "eth1_firewalls" {
     ipv4 = [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
-      if contains(node.tags, "use_${each.key}")
+      if contains(node.tags, "geth_${each.key}")
     ]
     ipv6 = []
   }

@@ -1,11 +1,7 @@
 resource "linode_firewall" "dc_local_firewalls" {
   for_each = {
     for node in data.linode_instances.all_nodes.instances :
-    node.label => { id : node.id, region : node.region, ip_address : node.ip_address, global : [
-      for tag in node.tags :
-      tag
-      if length(regexall(".*global.*", tag)) == 1
-    ] }
+    node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
     if contains(node.tags, "dc_local")
   }
 
@@ -22,30 +18,15 @@ resource "linode_firewall" "dc_local_firewalls" {
   }
 
   inbound {
-    label    = "allow-prometheus"
+    label    = "allow-prometheus-remote-write"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "9090"
-    ipv4     = ["0.0.0.0/0"]
-    #ipv4 = [
-    #  for node in data.linode_instances.all_nodes.instances :
-    #  "${node.ip_address}/32"
-    #  if node.label == replace(each.value.global[0], "use_", "")
-    #]
-    ipv6 = []
-  }
-
-  inbound {
-    label    = "allow-grafana"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "3000"
-    ipv4     = ["0.0.0.0/0"]
-    #ipv4 = [
-    #  for node in data.linode_instances.all_nodes.instances :
-    #  "${node.ip_address}/32"
-    #  if node.label == replace(each.value.global[0], "use_", "")
-    #]
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "rw_${each.key}")
+    ]
     ipv6 = []
   }
 

@@ -32,10 +32,10 @@ output "total_ssh_keys" {
 
 output "all_instances_information" {
   description = "All servers information"
-  value = {
+  value = length({
     for key in keys(var.instance_types) :
     key => module.multiple_linodes_instances[key].*
-  }
+  })
 }
 
 # generate inventory file for Ansible
@@ -47,10 +47,9 @@ resource "local_file" "inventory" {
       key => {
         for servername, data in module.multiple_linodes_instances[key].servers_information :
         servername => {
-          ip                = data.ip,
-          eth1              = length(data.eth1) == 0 ? "" : replace(data.eth1[0], "use_", ""),
-          dc_local          = length(data.dc_local) == 0 ? "" : replace(data.dc_local[0], "use_", ""),
-          global_federation = length(data.global_federation) == 0 ? "" : replace(data.global_federation[0], "use_", "")
+          ip    = data.ip,
+          geth  = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
+          rw    = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", "")
         }
       }
     }
