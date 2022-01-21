@@ -3,6 +3,21 @@ variable "number_instances" {
   type        = number
 }
 
+variable "total_eth1" {
+  description = "How many eth1 instances"
+  type        = number
+}
+
+variable "total_dc_local" {
+  description = "How many dc local logging instances"
+  type        = number
+}
+
+variable "total_global_federation" {
+  description = "How many global federation instances"
+  type        = number
+}
+
 variable "instance_image" {
   description = "What OS image to use for the instances"
   type        = string
@@ -23,12 +38,18 @@ variable "instance_ubuntu_password" {
   type        = string
 }
 
-variable "access_ssh_key" {
-  description = "What ssh key to be authorized for user ubuntu access on all linodes"
+variable "access_ssh_keys_array" {
+  description = "What ssh keys to be authorized for user ubuntu access on all linodes"
+  type        = list(string)
+}
+
+variable "instance_label" {
+  description = "What is the label name for this instances"
   type        = string
 }
 
+# Group for all linodes deployed using this terraform for differentiation
 variable "instance_group" {
-  description = "What is the group name for this instances"
+  description = "Group for all linodes deployed using this terraform for differentiation"
   type        = string
 }

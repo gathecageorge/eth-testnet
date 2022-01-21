@@ -1,7 +1,9 @@
 # create ssh key to be used by all linodes root ssh
-resource "linode_sshkey" "ubuntu_user_ssh_access_key" {
-  label   = "ubuntu_user_ssh_access_key"
-  ssh_key = chomp(var.access_ssh_key)
+resource "linode_sshkey" "ssh_access_keys" {
+  for_each = var.access_ssh_keys
+
+  label   = "${each.key}_ssh_access_key"
+  ssh_key = chomp(each.value)
 }
 
 # create all linodes needed for each type
@@ -10,31 +12,46 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  instance_group           = each.key
+  total_eth1              = lookup(var.instance_types, "eth1", { count = 0, type = "", image = "" }).count
+  total_dc_local          = lookup(var.instance_types, "dc_local", { count = 0, type = "", image = "" }).count
+  total_global_federation = lookup(var.instance_types, "global_federation", { count = 0, type = "", image = "" }).count
+
+  instance_group           = var.instance_group
+  instance_label           = each.key
   number_instances         = each.value.count
   instance_image           = each.value.image
-  instance_regions         = each.value.regions
+  instance_regions         = var.dc_regions
   instance_type            = each.value.type
-  access_ssh_key           = linode_sshkey.ubuntu_user_ssh_access_key.ssh_key
+  access_ssh_keys_array    = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
   instance_ubuntu_password = var.instance_ubuntu_password
 }
 
-# output ips of all created instances
-output "all_instances_server_ips" {
-  description = "All servers ip addresses"
-  value = {
+output "total_ssh_keys" {
+  value = length(linode_sshkey.ssh_access_keys)
+}
+
+output "all_instances_information" {
+  description = "All servers information"
+  value = length({
     for key in keys(var.instance_types) :
-    key => module.multiple_linodes_instances[key].server_ips
-  }
+    key => module.multiple_linodes_instances[key].*
+  })
 }
 
 # generate inventory file for Ansible
 resource "local_file" "inventory" {
   filename = "./ansible/inventory.ini"
-  content = templatefile("./templates/inventory.tftpl", { 
+  content = templatefile("./templates/inventory.tftpl", {
     servers = {
       for key in keys(var.instance_types) :
-        key => module.multiple_linodes_instances[key].server_ips
+      key => {
+        for servername, data in module.multiple_linodes_instances[key].servers_information :
+        servername => {
+          ip    = data.ip,
+          geth  = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
+          rw    = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", "")
+        }
+      }
     }
   })
 }
