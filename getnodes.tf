@@ -9,8 +9,3 @@ data "linode_instances" "all_nodes" {
     module.multiple_linodes_instances,
   ]
 }
-
-output "total_nodes" {
-  value = length(data.linode_instances.all_nodes.instances)
-}
-

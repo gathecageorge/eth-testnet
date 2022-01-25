@@ -45,5 +45,7 @@ resource "linode_instance" "instances" {
     )
   )
 
-  private_ip = true
+  private_ip       = true
+  watchdog_enabled = true
+  swap_size        = 512
 }

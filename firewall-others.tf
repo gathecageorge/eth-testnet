@@ -37,8 +37,4 @@ resource "linode_firewall" "others_firewalls" {
     node.id
     if contains(node.tags, "others")
   ]
-
-  depends_on = [
-    data.linode_instances.all_nodes,
-  ]
 }

@@ -47,7 +47,8 @@ resource "local_file" "inventory" {
       key => {
         for servername, data in module.multiple_linodes_instances[key].servers_information :
         servername => {
-          ip    = data.ip,
+          ip    = data.ip_address,
+          pip   = data.private_ip_address,
           geth  = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
           rw    = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", "")
         }

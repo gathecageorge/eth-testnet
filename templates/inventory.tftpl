@@ -1,12 +1,12 @@
 %{ for key, value in servers ~}
 %{ for servername, data in value ~}
 %{ if key == "global_federation" ~}
-${servername} ansible_host=${data.ip}
+${servername} ansible_host=${data.ip} ansible_host_private=${data.pip}
 %{ else ~}
 %{ if key == "dc_local" || key == "eth1" ~}
-${servername} ansible_host=${data.ip} rw_host=${data.rw}
+${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
 %{ else ~}
-${servername} ansible_host=${data.ip} geth_host=${data.geth} rw_host=${data.rw}
+${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw}
 %{ endif ~}
 %{ endif ~}
 %{ endfor ~}
