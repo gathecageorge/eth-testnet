@@ -29,6 +29,19 @@ resource "linode_firewall" "dc_local_firewalls" {
     ipv6 = []
   }
 
+  inbound {
+    label    = "allow-promtail-receive"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "3500"
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "rw_${each.key}")
+    ]
+    ipv6 = []
+  }
+
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
 

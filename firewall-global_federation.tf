@@ -35,10 +35,32 @@ resource "linode_firewall" "global_federation_firewalls" {
   }
 
   inbound {
+    label    = "allow-minio-s3"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "19001"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
     label    = "allow-thanos-receive"
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "10903"
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "rw_${each.key}")
+    ]
+    ipv6 = []
+  }
+
+    inbound {
+    label    = "allow-loki-receive"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "3100"
     ipv4 = [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
