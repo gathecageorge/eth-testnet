@@ -26,15 +26,6 @@ resource "linode_firewall" "globalfederation_firewalls" {
   }
 
   inbound {
-    label    = "allow-thanos-query"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "10902"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
     label    = "allow-minio-s3"
     action   = "ACCEPT"
     protocol = "TCP"
