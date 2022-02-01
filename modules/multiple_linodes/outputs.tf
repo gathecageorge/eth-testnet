@@ -12,12 +12,12 @@ output "servers_information" {
       geth = [
         for tag in instance.tags :
         tag
-        if length(regexall("geth.*", tag)) == 1
+        if length(regexall("^geth.*", tag)) == 1
       ],
       rw = [
         for tag in instance.tags :
         tag
-        if length(regexall("rw.*", tag)) == 1
+        if length(regexall("^rw_.*", tag)) == 1
       ]
     }
   }

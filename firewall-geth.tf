@@ -1,6 +1,6 @@
-resource "linode_firewall" "eth1_firewalls" {
+resource "linode_firewall" "geth_firewalls" {
   for_each = {
-    for node in module.multiple_linodes_instances["eth1"].servers_information :
+    for node in module.multiple_linodes_instances["geth"].servers_information :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
   }
 

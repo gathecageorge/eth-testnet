@@ -1,6 +1,6 @@
-resource "linode_firewall" "global_federation_firewalls" {
+resource "linode_firewall" "dclocal_firewalls" {
   for_each = {
-    for node in module.multiple_linodes_instances["global_federation"].servers_information :
+    for node in module.multiple_linodes_instances["dclocal"].servers_information :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
   }
 
@@ -17,37 +17,10 @@ resource "linode_firewall" "global_federation_firewalls" {
   }
 
   inbound {
-    label    = "allow-grafana"
+    label    = "allow-prometheus-remote-write"
     action   = "ACCEPT"
     protocol = "TCP"
-    ports    = "3000"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-thanos-query"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "10902"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-minio-s3"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "19001"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "allow-thanos-receive"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "10903"
+    ports    = "9090"
     ipv4 = [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
@@ -56,11 +29,11 @@ resource "linode_firewall" "global_federation_firewalls" {
     ipv6 = []
   }
 
-    inbound {
-    label    = "allow-loki-receive"
+  inbound {
+    label    = "allow-promtail-receive"
     action   = "ACCEPT"
     protocol = "TCP"
-    ports    = "3100"
+    ports    = "3500"
     ipv4 = [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"

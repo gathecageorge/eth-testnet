@@ -1,9 +1,9 @@
 %{ for key, value in servers ~}
 %{ for servername, data in value ~}
-%{ if key == "global_federation" ~}
+%{ if key == "globalfederation" ~}
 ${servername} ansible_host=${data.ip} ansible_host_private=${data.pip}
 %{ else ~}
-%{ if key == "dc_local" || key == "eth1" ~}
+%{ if key == "dclocal" || key == "geth" ~}
 ${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
 %{ else ~}
 ${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw}
@@ -21,7 +21,7 @@ ${servername}
 
 [beacon]
 %{ for key, value in servers ~}
-%{ if key != "eth1" && key != "global_federation" && key != "dc_local" ~}
+%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
 %{ for servername, data in value ~}
 ${servername}
 %{ endfor ~}
@@ -30,7 +30,7 @@ ${servername}
 
 [validator]
 %{ for key, value in servers ~}
-%{ if key != "eth1" && key != "global_federation" && key != "dc_local" ~}
+%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
 %{ for servername, data in value ~}
 ${servername}
 %{ endfor ~}
@@ -38,7 +38,7 @@ ${servername}
 %{ endfor ~}
 
 %{ for key, value in servers ~}
-%{ if key != "eth1" && key != "global_federation" && key != "dc_local" ~}
+%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
 [eth2client_${key}]
 %{ else ~}
 [${key}]
