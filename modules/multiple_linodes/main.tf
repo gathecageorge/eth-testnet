@@ -1,7 +1,7 @@
 resource "linode_instance" "instances" {
   count = var.number_instances
 
-  label           = "${var.instance_label}-${count.index}"
+  label           = "${var.instance_label}${count.index}"
   image           = var.instance_image
   region          = element(var.instance_regions, count.index)
   type            = var.instance_type
@@ -32,18 +32,20 @@ resource "linode_instance" "instances" {
   }
 
   group = var.instance_group
-  tags = (var.instance_label == "global_federation") ? [var.instance_label] : (
-    (var.instance_label == "eth1") ? [var.instance_label, "rw_dc_local-${count.index % var.total_dc_local}"] : (
-      (var.instance_label == "dc_local") ? [var.instance_label, "rw_global_federation-${count.index % var.total_global_federation}"] : (
+  tags = (var.instance_label == "globalfederation") ? [var.instance_label] : (
+    (var.instance_label == "geth") ? [var.instance_label, "rw_dclocal${count.index % var.total_dclocal}"] : (
+      (var.instance_label == "dclocal") ? [var.instance_label, "rw_globalfederation${count.index % var.total_globalfederation}"] : (
         [
           var.instance_label,
           "others",
-          "geth_eth1-${count.index % var.total_eth1}",
-          "rw_dc_local-${count.index % var.total_dc_local}",
+          "geth_geth${count.index % var.total_geth}",
+          "rw_dclocal${count.index % var.total_dclocal}",
         ]
       )
     )
   )
 
-  private_ip = true
+  private_ip       = true
+  watchdog_enabled = true
+  swap_size        = 512
 }

@@ -1,8 +1,7 @@
-resource "linode_firewall" "eth1_firewalls" {
+resource "linode_firewall" "geth_firewalls" {
   for_each = {
-    for node in data.linode_instances.all_nodes.instances :
+    for node in module.multiple_linodes_instances["geth"].servers_information :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
-    if contains(node.tags, "eth1")
   }
 
   label = "${each.key}_firewall"
@@ -65,8 +64,4 @@ resource "linode_firewall" "eth1_firewalls" {
   outbound_policy = "ACCEPT"
 
   linodes = [each.value.id]
-
-  depends_on = [
-    data.linode_instances.all_nodes,
-  ]
 }

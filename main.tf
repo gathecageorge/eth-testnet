@@ -12,9 +12,9 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  total_eth1              = lookup(var.instance_types, "eth1", { count = 0, type = "", image = "" }).count
-  total_dc_local          = lookup(var.instance_types, "dc_local", { count = 0, type = "", image = "" }).count
-  total_global_federation = lookup(var.instance_types, "global_federation", { count = 0, type = "", image = "" }).count
+  total_geth              = lookup(var.instance_types, "geth", { count = 0, type = "", image = "" }).count
+  total_dclocal          = lookup(var.instance_types, "dclocal", { count = 0, type = "", image = "" }).count
+  total_globalfederation = lookup(var.instance_types, "globalfederation", { count = 0, type = "", image = "" }).count
 
   instance_group           = var.instance_group
   instance_label           = each.key
@@ -47,7 +47,8 @@ resource "local_file" "inventory" {
       key => {
         for servername, data in module.multiple_linodes_instances[key].servers_information :
         servername => {
-          ip    = data.ip,
+          ip    = data.ip_address,
+          pip   = data.private_ip_address,
           geth  = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
           rw    = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", "")
         }

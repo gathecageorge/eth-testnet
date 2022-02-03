@@ -3,17 +3,17 @@ variable "number_instances" {
   type        = number
 }
 
-variable "total_eth1" {
-  description = "How many eth1 instances"
+variable "total_geth" {
+  description = "How many geth instances"
   type        = number
 }
 
-variable "total_dc_local" {
+variable "total_dclocal" {
   description = "How many dc local logging instances"
   type        = number
 }
 
-variable "total_global_federation" {
+variable "total_globalfederation" {
   description = "How many global federation instances"
   type        = number
 }
