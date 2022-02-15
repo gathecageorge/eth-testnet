@@ -17,10 +17,19 @@ resource "linode_firewall" "globalfederation_firewalls" {
   }
 
   inbound {
-    label    = "allow-grafana"
+    label    = "allow-http"
     action   = "ACCEPT"
     protocol = "TCP"
-    ports    = "3000"
+    ports    = "80"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = ["::/0"]
+  }
+
+  inbound {
+    label    = "allow-https"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "443"
     ipv4     = ["0.0.0.0/0"]
     ipv6     = ["::/0"]
   }
