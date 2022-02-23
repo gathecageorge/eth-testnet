@@ -60,6 +60,32 @@ resource "linode_firewall" "geth_firewalls" {
     ipv6 = []
   }
 
+  inbound {
+    label    = "allow-bootnode-9001"
+    action   = "ACCEPT"
+    protocol = "UDP"
+    ports    = "9001"
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "geth_${each.key}")
+    ]
+    ipv6 = []
+  }
+
+  inbound {
+    label    = "allow-bootnode-8002"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "8002"
+    ipv4 = [
+      for node in data.linode_instances.all_nodes.instances :
+      "${node.ip_address}/32"
+      if contains(node.tags, "geth_${each.key}")
+    ]
+    ipv6 = []
+  }
+
   inbound_policy  = "DROP"
   outbound_policy = "ACCEPT"
 
