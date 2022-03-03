@@ -12,7 +12,8 @@ module "multiple_linodes_instances" {
 
   for_each = var.instance_types
 
-  total_geth              = lookup(var.instance_types, "geth", { count = 0, type = "", image = "" }).count
+  class_groups           = var.class_groups
+  total_geth             = lookup(var.instance_types, "geth", { count = 0, type = "", image = "" }).count
   total_dclocal          = lookup(var.instance_types, "dclocal", { count = 0, type = "", image = "" }).count
   total_globalfederation = lookup(var.instance_types, "globalfederation", { count = 0, type = "", image = "" }).count
 

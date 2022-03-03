@@ -53,3 +53,8 @@ variable "instance_group" {
   description = "Group for all linodes deployed using this terraform for differentiation"
   type        = string
 }
+
+variable "class_groups" {
+  description = "Groups classifications of different sides"
+  type        = list(string)
+}

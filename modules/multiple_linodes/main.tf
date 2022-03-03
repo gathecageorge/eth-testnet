@@ -37,9 +37,9 @@ resource "linode_instance" "instances" {
       (var.instance_label == "dclocal") ? [var.instance_label, "rw_globalfederation${count.index % var.total_globalfederation}"] : (
         [
           var.instance_label,
-          "others",
           "geth_geth${count.index % var.total_geth}",
           "rw_dclocal${count.index % var.total_dclocal}",
+          element(var.class_groups, count.index)
         ]
       )
     )

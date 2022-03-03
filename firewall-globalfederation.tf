@@ -56,7 +56,7 @@ resource "linode_firewall" "globalfederation_firewalls" {
     ipv6 = []
   }
 
-    inbound {
+  inbound {
     label    = "allow-loki-receive"
     action   = "ACCEPT"
     protocol = "TCP"
