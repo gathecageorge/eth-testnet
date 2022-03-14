@@ -6,6 +6,14 @@ resource "linode_sshkey" "ssh_access_keys" {
   ssh_key = chomp(each.value)
 }
 
+resource "linode_stackscript" "non_root_login_script" {
+  label = "non_root_login_script"
+  description = "Setup non root login"
+  script = "${file("startscript.sh")}"
+  images = ["linode/ubuntu20.04"]
+  rev_note = "initial version"
+}
+
 # create all linodes needed for each type
 module "multiple_linodes_instances" {
   source = "./modules/multiple_linodes"
@@ -17,6 +25,7 @@ module "multiple_linodes_instances" {
   total_dclocal          = lookup(var.instance_types, "dclocal", { count = 0, type = "", image = "" }).count
   total_globalfederation = lookup(var.instance_types, "globalfederation", { count = 0, type = "", image = "" }).count
 
+  stackscript_id           = linode_stackscript.non_root_login_script.id
   instance_group           = var.instance_group
   instance_label           = each.key
   number_instances         = each.value.count
@@ -57,3 +66,17 @@ resource "local_file" "inventory" {
     }
   })
 }
+
+# resource "linode_instance" "stack_script_test" {
+#   image             = "linode/ubuntu20.04"
+#   label             = "stack_script_test"
+#   region            = "us-east"
+#   type              = "g6-nanode-1"
+#   authorized_keys   = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
+#   root_pass         = var.instance_ubuntu_password
+
+#   stackscript_id    = linode_stackscript.non_root_login_script.id
+#   stackscript_data  = {
+#     "instance_ubuntu_password" = var.instance_ubuntu_password
+#   }
+# }

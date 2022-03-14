@@ -66,11 +66,11 @@ resource "linode_firewall" "geth_firewalls" {
     protocol = "UDP"
     ports    = "9001"
     ipv4     = ["0.0.0.0/0"]
-    # ipv4 = [
+    # ipv4     = (var.groups_peering == "true") ? ["0.0.0.0/0"] : ([
     #   for node in data.linode_instances.all_nodes.instances :
     #   "${node.ip_address}/32"
-    #   if contains(node.tags, "geth_${each.key}")
-    # ]
+    #   if contains(node.tags, "group1")
+    # ])
     ipv6 = []
   }
 
@@ -80,25 +80,11 @@ resource "linode_firewall" "geth_firewalls" {
     protocol = "TCP"
     ports    = "9001"
     ipv4     = ["0.0.0.0/0"]
-    # ipv4 = [
+    # ipv4     = (var.groups_peering == "true") ? ["0.0.0.0/0"] : ([
     #   for node in data.linode_instances.all_nodes.instances :
     #   "${node.ip_address}/32"
-    #   if contains(node.tags, "geth_${each.key}")
-    # ]
-    ipv6 = []
-  }
-
-  inbound {
-    label    = "allow-bootnode-8002"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "8002"
-    ipv4     = ["0.0.0.0/0"]
-    # ipv4 = [
-    #   for node in data.linode_instances.all_nodes.instances :
-    #   "${node.ip_address}/32"
-    #   if contains(node.tags, "geth_${each.key}")
-    # ]
+    #   if contains(node.tags, "group1")
+    # ])
     ipv6 = []
   }
 

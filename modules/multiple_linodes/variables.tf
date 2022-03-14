@@ -58,3 +58,8 @@ variable "class_groups" {
   description = "Groups classifications of different sides"
   type        = list(string)
 }
+
+variable "stackscript_id" {
+  description = "Start script to use when provisioning linode"
+  type        = string
+}

@@ -8,6 +8,10 @@ resource "linode_instance" "instances" {
   root_pass       = var.instance_ubuntu_password
   authorized_keys = var.access_ssh_keys_array
 
+  # stackscript_id = var.stackscript_id
+  # stackscript_data = {
+  #   "instance_ubuntu_password" = var.instance_ubuntu_password
+  # }
   provisioner "remote-exec" {
     inline = [
       "useradd ubuntu -m -d /home/ubuntu",
