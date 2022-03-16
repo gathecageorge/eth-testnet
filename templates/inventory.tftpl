@@ -6,7 +6,7 @@ ${servername} ansible_host=${data.ip} ansible_host_private=${data.pip}
 %{ if key == "dclocal" || key == "geth" ~}
 ${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
 %{ else ~}
-${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw}
+${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp}
 %{ endif ~}
 %{ endif ~}
 %{ endfor ~}

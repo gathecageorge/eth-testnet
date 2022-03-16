@@ -9,6 +9,11 @@ output "servers_information" {
       private_ip_address = instance.private_ip_address,
       region = instance.region,
       tags = instance.tags
+      grp = [
+        for tag in instance.tags :
+        tag
+        if length(regexall("^group.*", tag)) == 1
+      ],
       geth = [
         for tag in instance.tags :
         tag
