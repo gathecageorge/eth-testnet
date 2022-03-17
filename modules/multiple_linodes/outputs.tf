@@ -7,6 +7,7 @@ output "servers_information" {
       label = instance.label,
       ip_address = instance.ip_address,
       private_ip_address = instance.private_ip_address,
+      ipv6 = instance.ipv6,
       region = instance.region,
       tags = instance.tags
       grp = [
