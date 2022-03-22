@@ -65,16 +65,7 @@ resource "linode_firewall" "geth_firewalls" {
     action   = "ACCEPT"
     protocol = "UDP"
     ports    = "9001"
-    ipv4     = (var.groups_peering == "true") ? ["0.0.0.0/0"] : ([
-      for node in data.linode_instances.all_nodes.instances :
-      "${node.ip_address}/32"
-      if contains(node.tags, "geth_${each.key}")
-    ])
-    # ipv6 = (var.groups_peering == "true") ? ["::/0"] : ([
-    #   for node in data.linode_instances.all_nodes.instances :
-    #   "${node.ipv6}"
-    #   if contains(node.tags, "geth_${each.key}")
-    # ])
+    ipv4 = ["0.0.0.0/0"]
     ipv6 = []
   }
 
@@ -83,35 +74,8 @@ resource "linode_firewall" "geth_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "9001"
-    ipv4     = (var.groups_peering == "true") ? ["0.0.0.0/0"] : ([
-      for node in data.linode_instances.all_nodes.instances :
-      "${node.ip_address}/32"
-      if contains(node.tags, "geth_${each.key}")
-    ])
-    # ipv6 = (var.groups_peering == "true") ? ["::/0"] : ([
-    #   for node in data.linode_instances.all_nodes.instances :
-    #   "${node.ipv6}"
-    #   if contains(node.tags, "geth_${each.key}")
-    # ])
+    ipv4 = ["0.0.0.0/0"]
     ipv6 = []
-  }
-
-  inbound {
-    label    = "Block-IP-V6-UDP"
-    action   = "DROP"
-    protocol = "UDP"
-    ports    = "9001"
-    ipv4     = []
-    ipv6     = ["::/0"]
-  }
-
-  inbound {
-    label    = "Block-IP-V6-TCP"
-    action   = "DROP"
-    protocol = "TCP"
-    ports    = "9001"
-    ipv4     = []
-    ipv6     = ["::/0"]
   }
 
   inbound_policy  = "DROP"
