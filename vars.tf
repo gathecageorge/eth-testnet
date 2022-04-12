@@ -42,6 +42,13 @@ variable "groups_peering" {
   type        = string
 }
 
+# Manage running state of instance
+variable "booted_status" {
+  description = "Manage running state of instance"
+  type        = string
+  default     = "true"
+}
+
 # instances/machines to create, different configurations
 variable "instance_types" {
   description = "instances/machines to create, different configurations"

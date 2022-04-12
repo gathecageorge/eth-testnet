@@ -34,6 +34,7 @@ module "multiple_linodes_instances" {
   instance_type            = each.value.type
   access_ssh_keys_array    = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
   instance_ubuntu_password = var.instance_ubuntu_password
+  booted_status            = var.booted_status
 }
 
 output "total_ssh_keys" {

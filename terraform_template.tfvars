@@ -7,6 +7,7 @@ instance_ubuntu_password = ""
 # Group for all linodes deployed using this terraform for differentiation
 instance_group = "ef-foundation"
 groups_peering = "true"
+booted_status = "true" # Can be true/false NB: Initially must be true when creating instance
 
 # ssh key to be authorized on all linodes for user ubuntu
 access_ssh_keys = {

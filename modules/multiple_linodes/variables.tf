@@ -54,6 +54,12 @@ variable "instance_group" {
   type        = string
 }
 
+# Manage running state of instance
+variable "booted_status" {
+  description = "Manage running state of instance"
+  type        = string
+}
+
 variable "class_groups" {
   description = "Groups classifications of different sides"
   type        = list(string)

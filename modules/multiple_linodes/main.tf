@@ -7,6 +7,7 @@ resource "linode_instance" "instances" {
   type            = var.instance_type
   root_pass       = var.instance_ubuntu_password
   authorized_keys = var.access_ssh_keys_array
+  booted          = (var.instance_label == "globalfederation" || var.instance_label == "geth" || var.instance_label == "dclocal") ? "true" : var.booted_status
 
   # stackscript_id = var.stackscript_id
   # stackscript_data = {
@@ -43,6 +44,7 @@ resource "linode_instance" "instances" {
           var.instance_label,
           "geth_geth${count.index % var.total_geth}",
           "rw_dclocal${count.index % var.total_dclocal}",
+          "testnet",
           element(var.class_groups, count.index)
         ]
       )
