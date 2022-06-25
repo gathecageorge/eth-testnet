@@ -21,11 +21,11 @@ resource "linode_firewall" "dclocal_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "9090"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "rw_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 
@@ -34,11 +34,11 @@ resource "linode_firewall" "dclocal_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "3500"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "rw_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 

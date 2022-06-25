@@ -37,18 +37,6 @@ module "multiple_linodes_instances" {
   booted_status            = var.booted_status
 }
 
-output "total_ssh_keys" {
-  value = length(linode_sshkey.ssh_access_keys)
-}
-
-output "all_instances_information" {
-  description = "All servers information"
-  value = length({
-    for key in keys(var.instance_types) :
-    key => module.multiple_linodes_instances[key].*
-  })
-}
-
 # generate inventory file for Ansible
 resource "local_file" "inventory" {
   filename = "./ansible/inventory.ini"
@@ -69,17 +57,3 @@ resource "local_file" "inventory" {
     }
   })
 }
-
-# resource "linode_instance" "stack_script_test" {
-#   image             = "linode/ubuntu20.04"
-#   label             = "stack_script_test"
-#   region            = "us-east"
-#   type              = "g6-nanode-1"
-#   authorized_keys   = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
-#   root_pass         = var.instance_ubuntu_password
-
-#   stackscript_id    = linode_stackscript.non_root_login_script.id
-#   stackscript_data  = {
-#     "instance_ubuntu_password" = var.instance_ubuntu_password
-#   }
-# }

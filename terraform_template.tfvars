@@ -21,8 +21,13 @@ instance_types = {
   globalfederation = { count = 2, type = "g6-standard-4", image = "linode/ubuntu20.04" },
   dclocal          = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
 
-  lighthouse = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
-  teku       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04" },
-  prysm      = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
-  nimbus     = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" }
+  test1_lighthouse = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  test1_teku       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04" },
+  test1_prysm      = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  test1_nimbus     = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" }
+
+  test2_lighthouse = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  test2_teku       = { count = 8, type = "g6-standard-6", image = "linode/ubuntu20.04" },
+  test2_prysm      = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  test2_nimbus     = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" }
 }

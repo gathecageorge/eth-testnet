@@ -26,15 +26,6 @@ resource "linode_firewall" "globalfederation_firewalls" {
   }
 
   inbound {
-    label    = "allow-grafana-temp"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "3000"
-    ipv4     = ["0.0.0.0/0"]
-    ipv6     = []
-  }
-
-  inbound {
     label    = "allow-https"
     action   = "ACCEPT"
     protocol = "TCP"
@@ -48,11 +39,11 @@ resource "linode_firewall" "globalfederation_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "10903"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "rw_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 
@@ -61,11 +52,11 @@ resource "linode_firewall" "globalfederation_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "3100"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "rw_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 

@@ -39,11 +39,11 @@ resource "linode_firewall" "geth_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "8545"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "geth_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 
@@ -52,11 +52,11 @@ resource "linode_firewall" "geth_firewalls" {
     action   = "ACCEPT"
     protocol = "TCP"
     ports    = "8546"
-    ipv4 = [
+    ipv4 = concat(["${each.value.ip_address}/32"], [
       for node in data.linode_instances.all_nodes.instances :
       "${node.ip_address}/32"
       if contains(node.tags, "geth_${each.key}")
-    ]
+    ])
     ipv6 = []
   }
 
