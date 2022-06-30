@@ -1,6 +1,6 @@
 data "linode_instances" "all_nodes" {
   filter {
-    name   = "group"
+    name   = "tags"
     values = [var.instance_group]
   }
 

@@ -69,3 +69,13 @@ variable "stackscript_id" {
   description = "Start script to use when provisioning linode"
   type        = string
 }
+
+variable "clientname" {
+  description = "Client name"
+  type        = string
+}
+
+variable "testname" {
+  description = "Testname"
+  type        = string
+}

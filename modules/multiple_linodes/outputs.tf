@@ -10,6 +10,7 @@ output "servers_information" {
       ipv6 = instance.ipv6,
       region = instance.region,
       tags = instance.tags
+      client = instance.group
       grp = [
         for tag in instance.tags :
         tag

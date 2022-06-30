@@ -36,12 +36,6 @@ variable "class_groups" {
   default     = ["group1", "group2"]
 }
 
-# Allow groups peering
-variable "groups_peering" {
-  description = "Allow groups peering"
-  type        = string
-}
-
 # Manage running state of instance
 variable "booted_status" {
   description = "Manage running state of instance"
@@ -49,8 +43,20 @@ variable "booted_status" {
   default     = "true"
 }
 
-# instances/machines to create, different configurations
-variable "instance_types" {
-  description = "instances/machines to create, different configurations"
+# global instances/machines to create, different configurations
+variable "global_instance_types" {
+  description = "global instances/machines to create, different configurations"
   type        = map(any)
+}
+
+# testnet instances/machines to create, different configurations
+variable "testnet_instance_types" {
+  description = "testnet instances/machines to create, different configurations"
+  type        = map(any)
+}
+
+# parallel tests
+variable "parallel_tests" {
+  description = "parallel tests"
+  type        = list(string)
 }
