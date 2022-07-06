@@ -48,8 +48,9 @@ locals {
           ipv6    = data.ipv6,
           grp     = length(data.grp) == 0 ? "" : data.grp[0],
           geth    = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
-          rw      = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", "")
-          client  = data.client
+          rw      = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", ""),
+          client  = data.client,
+          tags    = data.tags
         }
       }
     ]
@@ -82,6 +83,15 @@ locals {
     for serverlabel, data in local.created_all_servers :
       serverlabel => { id = data.id, region : data.region, ip_address : data.ip }
     if data.client == "dclocal"
+  }
+
+  dclocal_pertest_created_servers = {
+    for test in var.parallel_tests :
+      test => {
+        for serverlabel, data in local.created_all_servers :
+        serverlabel => { id = data.id, region : data.region, ip_address : data.ip }
+        if data.client == "dclocal" && length(regexall("^${test}.*", serverlabel)) == 1
+      }
   }
 
   testnet_created_servers = {
@@ -123,10 +133,11 @@ module "multiple_linodes_instances" {
 resource "local_file" "inventory" {
   filename = "./ansible/inventory.ini"
   content = templatefile("./templates/inventory.tftpl", {
-    all_servers             = local.created_all_servers,
-    logging_servers         = local.logging_servers,
-    client_created_servers  = local.client_created_servers,
-    dclocal_created_servers = local.dclocal_created_servers
-    testnet_created_servers = local.testnet_created_servers,
+    all_servers                     = local.created_all_servers,
+    logging_servers                 = local.logging_servers,
+    client_created_servers          = local.client_created_servers,
+    dclocal_created_servers         = local.dclocal_created_servers,
+    dclocal_pertest_created_servers = local.dclocal_pertest_created_servers
+    testnet_created_servers         = local.testnet_created_servers,
   })
 }

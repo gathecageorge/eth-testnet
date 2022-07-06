@@ -40,8 +40,8 @@ resource "linode_firewall" "geth_firewalls" {
     protocol = "TCP"
     ports    = "8545"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in data.linode_instances.all_nodes.instances :
-      "${node.ip_address}/32"
+      for node in local.created_all_servers :
+      "${node.ip}/32"
       if contains(node.tags, "geth_${each.key}")
     ])
     ipv6 = []
@@ -53,28 +53,10 @@ resource "linode_firewall" "geth_firewalls" {
     protocol = "TCP"
     ports    = "8546"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in data.linode_instances.all_nodes.instances :
-      "${node.ip_address}/32"
+      for node in local.created_all_servers :
+      "${node.ip}/32"
       if contains(node.tags, "geth_${each.key}")
     ])
-    ipv6 = []
-  }
-
-  inbound {
-    label    = "allow-bootnode-9001-udp"
-    action   = "ACCEPT"
-    protocol = "UDP"
-    ports    = "9001"
-    ipv4 = ["0.0.0.0/0"]
-    ipv6 = []
-  }
-
-  inbound {
-    label    = "allow-bootnode-9001-tcp"
-    action   = "ACCEPT"
-    protocol = "TCP"
-    ports    = "9001"
-    ipv4 = ["0.0.0.0/0"]
     ipv6 = []
   }
 

@@ -27,6 +27,13 @@ ${serverlabel}
 ${serverlabel}
 %{ endfor }
 
+%{~ for test, servers in dclocal_pertest_created_servers ~}
+[${test}_dclocal]
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor }
+%{ endfor ~}
+
 %{~ for test, servers in testnet_created_servers ~}
 [${test}_validator]
 %{ for serverlabel, data in servers ~}
