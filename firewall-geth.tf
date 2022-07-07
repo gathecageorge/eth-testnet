@@ -1,8 +1,8 @@
 resource "linode_firewall" "geth_firewalls" {
-  for_each = {
+  for_each = try({
     for node in module.multiple_linodes_instances["geth"].servers_information :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
-  }
+  }, {})
 
   label = "${each.key}_firewall"
   tags  = ["${each.key}"]
