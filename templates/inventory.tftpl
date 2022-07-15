@@ -5,7 +5,7 @@ ${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip}
 %{ if data.client == "dclocal" || data.client == "geth" ~}
 ${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
 %{ else ~}
-${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp} test=${data.test}
 %{ endif ~}
 %{ endif ~}
 %{ endfor ~}
@@ -47,6 +47,13 @@ ${serverlabel}
 ${serverlabel}
 %{ endfor }
 %{ endfor ~}
+
+[beacons]
+%{ for test, servers in testnet_created_servers ~}
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor ~}
+%{ endfor }
 
 %{~ for client, servers in client_created_servers ~}
 [eth2client_${client}]

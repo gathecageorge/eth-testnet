@@ -18,10 +18,6 @@ Automated testnet deploy on Linode
 
 Run this to create nodes first
 
-`terraform apply -target module.multiple_linodes_instances`
-
-Run this to create firewalls and everything else
-
 `terraform apply`
 
 ## Delete all Project resources

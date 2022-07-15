@@ -50,7 +50,8 @@ locals {
           geth    = length(data.geth) == 0 ? "" : replace(data.geth[0], "geth_", ""),
           rw      = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", ""),
           client  = data.client,
-          tags    = data.tags
+          tags    = data.tags,
+          test    = local.all_create_servers[key].test
         }
       }
     ]
