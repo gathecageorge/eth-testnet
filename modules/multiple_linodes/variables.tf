@@ -53,3 +53,29 @@ variable "instance_group" {
   description = "Group for all linodes deployed using this terraform for differentiation"
   type        = string
 }
+
+# Manage running state of instance
+variable "booted_status" {
+  description = "Manage running state of instance"
+  type        = string
+}
+
+variable "class_groups" {
+  description = "Groups classifications of different sides"
+  type        = list(string)
+}
+
+variable "stackscript_id" {
+  description = "Start script to use when provisioning linode"
+  type        = string
+}
+
+variable "clientname" {
+  description = "Client name"
+  type        = string
+}
+
+variable "testname" {
+  description = "Testname"
+  type        = string
+}

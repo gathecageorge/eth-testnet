@@ -29,8 +29,34 @@ variable "dc_regions" {
   default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
 }
 
-# instances/machines to create, different configurations
-variable "instance_types" {
-  description = "instances/machines to create, different configurations"
+# Groups classifications of different sides
+variable "class_groups" {
+  description = "Groups classifications of different sides"
+  type        = list(string)
+  default     = ["group1", "group2"]
+}
+
+# Manage running state of instance
+variable "booted_status" {
+  description = "Manage running state of instance"
+  type        = string
+  default     = "true"
+}
+
+# global instances/machines to create, different configurations
+variable "global_instance_types" {
+  description = "global instances/machines to create, different configurations"
   type        = map(any)
+}
+
+# testnet instances/machines to create, different configurations
+variable "testnet_instance_types" {
+  description = "testnet instances/machines to create, different configurations"
+  type        = map(any)
+}
+
+# parallel tests
+variable "parallel_tests" {
+  description = "parallel tests"
+  type        = list(string)
 }

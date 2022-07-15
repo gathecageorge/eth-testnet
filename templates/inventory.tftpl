@@ -1,49 +1,63 @@
-%{ for key, value in servers ~}
-%{ for servername, data in value ~}
-%{ if key == "globalfederation" ~}
-${servername} ansible_host=${data.ip} ansible_host_private=${data.pip}
+%{ for serverlabel, data in all_servers ~}
+%{ if data.client == "globalfederation" ~}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip}
 %{ else ~}
-%{ if key == "dclocal" || key == "geth" ~}
-${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
+%{ if data.client == "dclocal" || data.client == "geth" ~}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
 %{ else ~}
-${servername} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp} test=${data.test}
 %{ endif ~}
 %{ endif ~}
-%{ endfor ~}
 %{ endfor ~}
 
 [all]
-%{ for key, value in servers ~}
-%{ for servername, data in value ~}
-${servername}
-%{ endfor ~}
+%{ for serverlabel, data in all_servers ~}
+${serverlabel}
 %{ endfor ~}
 
-[beacon]
-%{ for key, value in servers ~}
-%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
-%{ for servername, data in value ~}
-${servername}
-%{ endfor ~}
-%{ endif ~}
-%{ endfor ~}
-
-[validator]
-%{ for key, value in servers ~}
-%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
-%{ for servername, data in value ~}
-${servername}
-%{ endfor ~}
-%{ endif ~}
-%{ endfor ~}
-
-%{ for key, value in servers ~}
-%{ if key != "geth" && key != "globalfederation" && key != "dclocal" ~}
-[eth2client_${key}]
-%{ else ~}
+%{ for key, value in logging_servers ~}
 [${key}]
-%{ endif ~}
-%{ for servername, data in value ~}
-${servername}
+%{ for serverlabel in value ~}
+${serverlabel}
+%{ endfor }
+%{ endfor ~}
+
+[dclocal]
+%{ for serverlabel, data in dclocal_created_servers ~}
+${serverlabel}
+%{ endfor }
+
+%{~ for test, servers in dclocal_pertest_created_servers ~}
+[${test}_dclocal]
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor }
+%{ endfor ~}
+
+%{~ for test, servers in testnet_created_servers ~}
+[${test}_validator]
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor }
+%{ endfor ~}
+
+%{~ for test, servers in testnet_created_servers ~}
+[${test}_beacon]
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor }
+%{ endfor ~}
+
+[beacons]
+%{ for test, servers in testnet_created_servers ~}
+%{ for serverlabel, data in servers ~}
+${serverlabel}
+%{ endfor ~}
+%{ endfor }
+
+%{~ for client, servers in client_created_servers ~}
+[eth2client_${client}]
+%{ for serverlabel, data in servers ~}
+${serverlabel}
 %{ endfor }
 %{ endfor ~}
