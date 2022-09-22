@@ -20,6 +20,10 @@ Run this to create nodes first
 
 `terraform apply`
 
+```bash
+# terraform apply -target module.multiple_linodes_instances
+```
+
 ## Delete all Project resources
 
 `terraform destroy`
