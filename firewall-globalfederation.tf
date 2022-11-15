@@ -1,6 +1,6 @@
 resource "linode_firewall" "globalfederation_firewalls" {
   for_each = try({
-    for node in module.multiple_linodes_instances["globalfederation"].servers_information :
+    for node in resource.linode_instance.globalfederation_servers :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
   }, {})
 

@@ -79,3 +79,8 @@ variable "testname" {
   description = "Testname"
   type        = string
 }
+
+variable "testnet" {
+  description = "Testnet"
+  type        = string
+}

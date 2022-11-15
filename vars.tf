@@ -22,6 +22,18 @@ variable "access_ssh_keys" {
   type        = map(string)
 }
 
+# el servers
+variable "geth" {
+  description = "el servers"
+  type        = map(string)
+}
+
+# globalfederation servers
+variable "globalfederation" {
+  description = "globalfederation servers"
+  type        = map(string)
+}
+
 # Regions to distribute linodes to
 variable "dc_regions" {
   description = "Regions to distribute linodes to"
@@ -36,19 +48,6 @@ variable "class_groups" {
   default     = ["group1", "group2"]
 }
 
-# Manage running state of instance
-variable "booted_status" {
-  description = "Manage running state of instance"
-  type        = string
-  default     = "true"
-}
-
-# global instances/machines to create, different configurations
-variable "global_instance_types" {
-  description = "global instances/machines to create, different configurations"
-  type        = map(any)
-}
-
 # testnet instances/machines to create, different configurations
 variable "testnet_instance_types" {
   description = "testnet instances/machines to create, different configurations"
@@ -58,5 +57,5 @@ variable "testnet_instance_types" {
 # parallel tests
 variable "parallel_tests" {
   description = "parallel tests"
-  type        = list(string)
+  type        = map(any)
 }

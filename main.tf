@@ -10,34 +10,75 @@ resource "linode_stackscript" "non_root_login_script" {
   label = "non_root_login_script"
   description = "Setup non root login"
   script = "${file("startscript.sh")}"
-  images = ["linode/ubuntu20.04"]
+  images = ["linode/ubuntu22.04"]
   rev_note = "initial version"
 }
 
+resource "linode_instance" "globalfederation_servers" {
+  count = var.globalfederation.count
+
+  label           = "globalfederation${count.index}"
+  image           = var.globalfederation.image
+  region          = element(var.dc_regions, count.index)
+  type            = var.globalfederation.type
+  root_pass       = var.instance_ubuntu_password
+  authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
+
+  stackscript_id = linode_stackscript.non_root_login_script.id
+  stackscript_data = {
+    "instance_ubuntu_password" = var.instance_ubuntu_password
+  }
+  
+  group = "globalfederation"
+  tags = [var.instance_group]
+  private_ip       = true
+  watchdog_enabled = true
+  swap_size        = 512
+}
+
+resource "linode_instance" "geth_servers" {
+  count = var.geth.count
+
+  label           = "geth${count.index}"
+  image           = var.geth.image
+  region          = element(var.dc_regions, count.index)
+  type            = var.geth.type
+  root_pass       = var.instance_ubuntu_password
+  authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
+
+  stackscript_id = linode_stackscript.non_root_login_script.id
+  stackscript_data = {
+    "instance_ubuntu_password" = var.instance_ubuntu_password
+  }
+  
+  group = "rw_globalfederation${count.index % var.globalfederation.count}"
+  tags = [var.instance_group, "rw_globalfederation${count.index % var.globalfederation.count}"]
+  private_ip       = true
+  watchdog_enabled = true
+  swap_size        = 512
+}
+
 locals {
-  geth_count              = lookup(var.global_instance_types, "geth", { count = 0, type = "", image = "", client = "", test = "" }).count
-  globalfederation_count  = lookup(var.global_instance_types, "globalfederation", { count = 0, type = "", image = "", client = "", test = "" }).count
   dclocal_count           = lookup(var.testnet_instance_types, "dclocal", { count = 0, type = "", image = "" }).count
 
   config_testnet_servers = distinct(flatten([ 
-    for testname in var.parallel_tests : [
+    for testname in keys(var.parallel_tests) : [
       for clientname, clientdata in var.testnet_instance_types : {
         test = testname
         client = clientname
-        data = merge(clientdata, {test = testname, client = clientname})
+        testnet = var.parallel_tests[testname].testnet
+        data = merge(clientdata, {test = testname, client = clientname, testnet = var.parallel_tests[testname].testnet})
       }
     ]
   ]))
 
   testnet_create_servers = {
     for entry in local.config_testnet_servers :
-      "${entry.test}${entry.client}" => entry.data
+      "${entry.testnet}${entry.test}${entry.client}" => entry.data
   }
 
-  all_create_servers = merge(var.global_instance_types, local.testnet_create_servers)
-
   config_created_all_servers = distinct(flatten([ 
-    for key in keys(local.all_create_servers) : [
+    for key in keys(local.testnet_create_servers) : [
       for serverlabel, data in module.multiple_linodes_instances[key].servers_information : {
         serverlabel = serverlabel
         data = {
@@ -51,7 +92,8 @@ locals {
           rw      = length(data.rw) == 0 ? "" : replace(data.rw[0], "rw_", ""),
           client  = data.client,
           tags    = data.tags,
-          test    = local.all_create_servers[key].test
+          test    = local.testnet_create_servers[key].test,
+          testnet = local.testnet_create_servers[key].testnet,
         }
       }
     ]
@@ -60,14 +102,6 @@ locals {
   created_all_servers = {
     for entry in local.config_created_all_servers :
       "${entry.serverlabel}" => entry.data
-  }
-
-  logging_servers = {
-    for key in keys(var.global_instance_types) :
-      key => {
-        for serverlabel, data in module.multiple_linodes_instances[key].servers_information :
-        serverlabel => serverlabel
-      }
   }
 
   client_created_servers = {
@@ -87,20 +121,20 @@ locals {
   }
 
   dclocal_pertest_created_servers = {
-    for test in var.parallel_tests :
+    for test in keys(var.parallel_tests) :
       test => {
         for serverlabel, data in local.created_all_servers :
         serverlabel => { id = data.id, region : data.region, ip_address : data.ip }
-        if data.client == "dclocal" && length(regexall("^${test}.*", serverlabel)) == 1
+        if data.client == "dclocal" && length(regexall("^${var.parallel_tests[test].testnet}${test}.*", serverlabel)) == 1
       }
   }
 
   testnet_created_servers = {
-    for test in var.parallel_tests :
+    for test in keys(var.parallel_tests) :
       test => {
         for serverlabel, data in local.created_all_servers :
         serverlabel => { id = data.id, region : data.region, ip_address : data.ip }
-        if data.client != "dclocal" && length(regexall("^${test}.*", serverlabel)) == 1
+        if data.client != "dclocal" && length(regexall("^${var.parallel_tests[test].testnet}${test}.*", serverlabel)) == 1
       }
   }
 }
@@ -108,13 +142,12 @@ locals {
 # create multiple linodes needed for each type
 module "multiple_linodes_instances" {
   source = "./modules/multiple_linodes"
-
-  for_each = local.all_create_servers
+  for_each = local.testnet_create_servers
 
   class_groups           = var.class_groups
-  total_geth             = local.geth_count
+  total_geth             = var.geth.count
   total_dclocal          = local.dclocal_count
-  total_globalfederation = local.globalfederation_count
+  total_globalfederation = var.globalfederation.count
 
   stackscript_id           = linode_stackscript.non_root_login_script.id
   instance_group           = var.instance_group
@@ -122,23 +155,25 @@ module "multiple_linodes_instances" {
   number_instances         = each.value.count
   clientname               = each.value.client
   testname                 = each.value.test
+  testnet                  = each.value.testnet
   instance_image           = each.value.image
   instance_regions         = var.dc_regions
   instance_type            = each.value.type
   access_ssh_keys_array    = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
   instance_ubuntu_password = var.instance_ubuntu_password
-  booted_status            = var.booted_status
+  booted_status            = var.parallel_tests[each.value.test].booted
 }
 
-# generate inventory file for Ansible
+# # generate inventory file for Ansible
 resource "local_file" "inventory" {
   filename = "./ansible/inventory.ini"
   content = templatefile("./templates/inventory.tftpl", {
-    all_servers                     = local.created_all_servers,
-    logging_servers                 = local.logging_servers,
-    client_created_servers          = local.client_created_servers,
-    dclocal_created_servers         = local.dclocal_created_servers,
+    globalfederation_servers        = linode_instance.globalfederation_servers
+    geth_servers                    = linode_instance.geth_servers
+    all_servers                     = local.created_all_servers
+    dclocal_created_servers         = local.dclocal_created_servers
     dclocal_pertest_created_servers = local.dclocal_pertest_created_servers
-    testnet_created_servers         = local.testnet_created_servers,
+    testnet_created_servers         = local.testnet_created_servers
+    client_created_servers          = local.client_created_servers
   })
 }
