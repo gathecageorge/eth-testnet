@@ -18,16 +18,16 @@ geth             = { count = 1, type = "g6-standard-6", image = "linode/ubuntu22
 
 # testnet instances/machines to create, different configurations
 testnet_instance_types = {
-  dclocal    = { count = 2, type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  dclocal    = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
 
-  lighthouse = { count = 8, type = "g6-standard-2", image = "linode/ubuntu22.04" },
-  teku       = { count = 8, type = "g6-standard-2", image = "linode/ubuntu22.04" },
-  prysm      = { count = 8, type = "g6-standard-2", image = "linode/ubuntu22.04" },
-  nimbus     = { count = 8, type = "g6-standard-2", image = "linode/ubuntu22.04" }
+  lighthouse = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  teku       = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  prysm      = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  nimbus     = { type = "g6-standard-2", image = "linode/ubuntu22.04" }
 }
 
 # parallel tests
 parallel_tests = {
-  test1 = {booted = "true", testnet = "premerge"}
-  test2 = {booted = "true", testnet = "postmerge"}
+  test1 = {booted = "true", testnet = "premerge", per_client = 8, dclocal = 1}
+  test2 = {booted = "true", testnet = "postmerge", per_client = 16, dclocal = 1}
 }

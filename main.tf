@@ -59,15 +59,13 @@ resource "linode_instance" "geth_servers" {
 }
 
 locals {
-  dclocal_count           = lookup(var.testnet_instance_types, "dclocal", { count = 0, type = "", image = "" }).count
-
   config_testnet_servers = distinct(flatten([ 
     for testname in keys(var.parallel_tests) : [
       for clientname, clientdata in var.testnet_instance_types : {
         test = testname
         client = clientname
         testnet = var.parallel_tests[testname].testnet
-        data = merge(clientdata, {test = testname, client = clientname, testnet = var.parallel_tests[testname].testnet})
+        data = merge({ count = clientname == "dclocal" ? var.parallel_tests[testname].dclocal : var.parallel_tests[testname].per_client, type = clientdata.type, image = clientdata.image }, {test = testname, client = clientname, testnet = var.parallel_tests[testname].testnet})
       }
     ]
   ]))
@@ -146,7 +144,7 @@ module "multiple_linodes_instances" {
 
   class_groups           = var.class_groups
   total_geth             = var.geth.count
-  total_dclocal          = local.dclocal_count
+  total_dclocal          = var.parallel_tests[each.value.test].dclocal
   total_globalfederation = var.globalfederation.count
 
   stackscript_id           = linode_stackscript.non_root_login_script.id
