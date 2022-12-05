@@ -19,7 +19,7 @@ resource "linode_instance" "globalfederation_servers" {
 
   label           = "globalfederation${count.index}"
   image           = var.globalfederation.image
-  region          = element(var.dc_regions, count.index)
+  region          = element(var.dc_regions_global, count.index)
   type            = var.globalfederation.type
   root_pass       = var.instance_ubuntu_password
   authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
@@ -41,7 +41,7 @@ resource "linode_instance" "geth_servers" {
 
   label           = "geth${count.index}"
   image           = var.geth.image
-  region          = element(var.dc_regions, count.index)
+  region          = element(var.dc_regions_global, count.index)
   type            = var.geth.type
   root_pass       = var.instance_ubuntu_password
   authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
@@ -155,7 +155,9 @@ module "multiple_linodes_instances" {
   testname                 = each.value.test
   testnet                  = each.value.testnet
   instance_image           = each.value.image
-  instance_regions         = var.dc_regions
+  instance_regions_global  = var.dc_regions_global
+  instance_regions_group1  = var.dc_regions_group1
+  instance_regions_group2  = var.dc_regions_group2
   instance_type            = each.value.type
   access_ssh_keys_array    = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
   instance_ubuntu_password = var.instance_ubuntu_password
