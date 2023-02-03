@@ -21,7 +21,7 @@ Run this to create nodes first
 `terraform apply`
 
 ```bash
-# terraform apply -target module.multiple_linodes_instances
+# terraform apply -target linode_instance.globalfederation_servers
 ```
 
 ## Delete all Project resources
