@@ -40,7 +40,7 @@ resource "linode_firewall" "globalfederation_firewalls" {
     protocol = "TCP"
     ports    = "10903"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in local.created_all_servers :
+      for node in merge(local.created_all_servers, local.geth_servers_data) :
       "${node.ip}/32"
       if contains(node.tags, "rw_${each.key}")
     ])
@@ -53,7 +53,7 @@ resource "linode_firewall" "globalfederation_firewalls" {
     protocol = "TCP"
     ports    = "3100"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in local.created_all_servers :
+      for node in merge(local.created_all_servers, local.geth_servers_data) :
       "${node.ip}/32"
       if contains(node.tags, "rw_${each.key}")
     ])

@@ -59,6 +59,24 @@ resource "linode_instance" "geth_servers" {
 }
 
 locals {
+  geth_servers_data = {
+    for server in linode_instance.geth_servers :
+      "${server.label}" => {
+        region  = server.region,
+        id      = server.id,
+        ip      = server.ip_address,
+        pip     = server.private_ip_address,
+        ipv6    = server.ipv6,
+        grp     = "grp",
+        geth    = "geth",
+        rw      = "rw",
+        client  = "geth",
+        tags    = server.tags,
+        test    = "all",
+        testnet = "all",
+      }
+  }
+
   config_testnet_servers = distinct(flatten([ 
     for testname in keys(var.parallel_tests) : [
       for clientname, clientdata in var.testnet_instance_types : {
