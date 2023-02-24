@@ -23,8 +23,18 @@ variable "instance_image" {
   type        = string
 }
 
-variable "instance_regions" {
-  description = "What regions to launch the instances, NB will be distributed across the regions"
+variable "instance_regions_global" {
+  description = "What regions to launch the instances, NB will be distributed across the regions for global"
+  type        = list(string)
+}
+
+variable "instance_regions_group1" {
+  description = "What regions to launch the instances, NB will be distributed across the regions for group 1"
+  type        = list(string)
+}
+
+variable "instance_regions_group2" {
+  description = "What regions to launch the instances, NB will be distributed across the regions for group 2"
   type        = list(string)
 }
 
@@ -77,5 +87,10 @@ variable "clientname" {
 
 variable "testname" {
   description = "Testname"
+  type        = string
+}
+
+variable "testnet" {
+  description = "Testnet"
   type        = string
 }

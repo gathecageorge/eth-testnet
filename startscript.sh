@@ -13,3 +13,4 @@ passwd -d root
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 service ssh reload
+apt update && apt upgrade

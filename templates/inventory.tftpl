@@ -1,25 +1,42 @@
+%{ for server in globalfederation_servers ~}
+${server.label} ansible_host=${server.ip_address} ansible_host_private=${server.private_ip_address} region=${server.region}
+%{ endfor ~}
+
+%{ for server in geth_servers ~}
+${server.label} ansible_host=${server.ip_address} ansible_host_private=${server.private_ip_address} rw_host=${replace(server.group, "/^rw_/", "")} region=${server.region}
+%{ endfor ~}
+
 %{ for serverlabel, data in all_servers ~}
-%{ if data.client == "globalfederation" ~}
-${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip}
+%{ if data.client == "dclocal" ~}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw} region=${data.region}
 %{ else ~}
-%{ if data.client == "dclocal" || data.client == "geth" ~}
-${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw}
+%{ if data.testnet == "premerge" ~}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp} test=${data.test} region=${data.region}
 %{ else ~}
-${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} geth_host=${data.geth} rw_host=${data.rw} grp=${data.grp} test=${data.test}
+${serverlabel} ansible_host=${data.ip} ansible_host_private=${data.pip} rw_host=${data.rw} grp=${data.grp} test=${data.test} region=${data.region}
 %{ endif ~}
 %{ endif ~}
 %{ endfor ~}
 
 [all]
+%{ for server in globalfederation_servers ~}
+${server.label}
+%{ endfor ~}
+%{ for server in geth_servers ~}
+${server.label}
+%{ endfor ~}
 %{ for serverlabel, data in all_servers ~}
 ${serverlabel}
 %{ endfor ~}
 
-%{ for key, value in logging_servers ~}
-[${key}]
-%{ for serverlabel in value ~}
-${serverlabel}
-%{ endfor }
+[globalfederation]
+%{ for server in globalfederation_servers ~}
+${server.label}
+%{ endfor ~}
+
+[geth]
+%{ for server in geth_servers ~}
+${server.label}
 %{ endfor ~}
 
 [dclocal]

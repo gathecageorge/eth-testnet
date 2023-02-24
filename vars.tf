@@ -22,11 +22,37 @@ variable "access_ssh_keys" {
   type        = map(string)
 }
 
-# Regions to distribute linodes to
-variable "dc_regions" {
-  description = "Regions to distribute linodes to"
+# el servers
+variable "geth" {
+  description = "el servers"
+  type        = map(string)
+}
+
+# globalfederation servers
+variable "globalfederation" {
+  description = "globalfederation servers"
+  type        = map(string)
+}
+
+# Regions to distribute linodes to global shared
+variable "dc_regions_global" {
+  description = "Regions to distribute linodes to global shared"
   type        = list(string)
   default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
+}
+
+# Regions to distribute linodes to group 1
+variable "dc_regions_group1" {
+  description = "Regions to distribute linodes to group 1"
+  type        = list(string)
+  default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast"]
+}
+
+# Regions to distribute linodes to group 2
+variable "dc_regions_group2" {
+  description = "Regions to distribute linodes to group 2"
+  type        = list(string)
+  default     = ["us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
 }
 
 # Groups classifications of different sides
@@ -34,19 +60,6 @@ variable "class_groups" {
   description = "Groups classifications of different sides"
   type        = list(string)
   default     = ["group1", "group2"]
-}
-
-# Manage running state of instance
-variable "booted_status" {
-  description = "Manage running state of instance"
-  type        = string
-  default     = "true"
-}
-
-# global instances/machines to create, different configurations
-variable "global_instance_types" {
-  description = "global instances/machines to create, different configurations"
-  type        = map(any)
 }
 
 # testnet instances/machines to create, different configurations
@@ -58,5 +71,5 @@ variable "testnet_instance_types" {
 # parallel tests
 variable "parallel_tests" {
   description = "parallel tests"
-  type        = list(string)
+  type        = map(any)
 }

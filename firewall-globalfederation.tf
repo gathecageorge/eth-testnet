@@ -1,6 +1,6 @@
 resource "linode_firewall" "globalfederation_firewalls" {
   for_each = try({
-    for node in module.multiple_linodes_instances["globalfederation"].servers_information :
+    for node in resource.linode_instance.globalfederation_servers :
     node.label => { id : node.id, region : node.region, ip_address : node.ip_address }
   }, {})
 
@@ -40,7 +40,7 @@ resource "linode_firewall" "globalfederation_firewalls" {
     protocol = "TCP"
     ports    = "10903"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in local.created_all_servers :
+      for node in merge(local.created_all_servers, local.geth_servers_data) :
       "${node.ip}/32"
       if contains(node.tags, "rw_${each.key}")
     ])
@@ -53,7 +53,7 @@ resource "linode_firewall" "globalfederation_firewalls" {
     protocol = "TCP"
     ports    = "3100"
     ipv4 = concat(["${each.value.ip_address}/32"], [
-      for node in local.created_all_servers :
+      for node in merge(local.created_all_servers, local.geth_servers_data) :
       "${node.ip}/32"
       if contains(node.tags, "rw_${each.key}")
     ])

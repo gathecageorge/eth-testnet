@@ -7,30 +7,27 @@ instance_ubuntu_password = ""
 # Group for all linodes deployed using this terraform for differentiation
 instance_group = "ef-foundation"
 
-# Can be true/false NB: Initially must be true when creating instance
-booted_status = "true"
-
 # ssh key to be authorized on all linodes for user ubuntu
 access_ssh_keys = {
-  key1_label : "public key here",
-  key2_label : "public key here",
+  key1_label : "public key here"
 }
 
 # global instances/machines to create, different configurations
-global_instance_types = {
-  globalfederation = { count = 1, type = "g6-standard-4", image = "linode/ubuntu20.04", client = "globalfederation", test = "all" }
-  geth             = { count = 1, type = "g6-standard-4", image = "linode/ubuntu20.04", client = "geth", test = "all" },
-}
+globalfederation = { count = 1, type = "g6-standard-4", image = "linode/ubuntu22.04", client = "globalfederation" }
+geth             = { count = 1, type = "g6-standard-6", image = "linode/ubuntu22.04", client = "geth" }
 
 # testnet instances/machines to create, different configurations
 testnet_instance_types = {
-  dclocal    = { count = 2, type = "g6-standard-4", image = "linode/ubuntu20.04" },
+  dclocal    = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
 
-  lighthouse = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
-  teku       = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
-  prysm      = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" },
-  nimbus     = { count = 8, type = "g6-standard-4", image = "linode/ubuntu20.04" }
+  lighthouse = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  teku       = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  prysm      = { type = "g6-standard-2", image = "linode/ubuntu22.04" },
+  nimbus     = { type = "g6-standard-2", image = "linode/ubuntu22.04" }
 }
 
 # parallel tests
-parallel_tests = ["test1", "test2", "test3"]
+parallel_tests = {
+  test1 = {booted = "true", testnet = "premerge", per_client = 8, dclocal = 1}
+  test2 = {booted = "true", testnet = "postmerge", per_client = 16, dclocal = 1}
+}
