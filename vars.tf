@@ -34,25 +34,25 @@ variable "globalfederation" {
   type        = map(string)
 }
 
-# Regions to distribute linodes to global shared
+# Regions to distribute linodes to global shared : Removed us-west as they dont have NVME Block storage
 variable "dc_regions_global" {
   description = "Regions to distribute linodes to global shared"
   type        = list(string)
-  default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
+  default     = ["us-east", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "ap-south", "eu-central", "ap-northeast"]
 }
 
 # Regions to distribute linodes to group 1
 variable "dc_regions_group1" {
   description = "Regions to distribute linodes to group 1"
   type        = list(string)
-  default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast"]
+  default     = ["us-east", "eu-west", "ap-west", "ca-central", "ap-southeast"]
 }
 
 # Regions to distribute linodes to group 2
 variable "dc_regions_group2" {
   description = "Regions to distribute linodes to group 2"
   type        = list(string)
-  default     = ["us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
+  default     = ["us-central", "us-southeast", "ap-south", "eu-central", "ap-northeast"]
 }
 
 # Groups classifications of different sides
