@@ -1,9 +1,16 @@
+# Get ssh keys from github
+data "external" "github_usernames_keys" {
+  for_each = toset(var.github_usernames)
+
+  program = ["python3", "githubkey.py", "${each.key}"]
+}
+
 # create ssh key to be used by all linodes root ssh
 resource "linode_sshkey" "ssh_access_keys" {
-  for_each = var.access_ssh_keys
+  for_each = data.external.github_usernames_keys
 
   label   = "${each.key}_ssh_access_key"
-  ssh_key = chomp(each.value)
+  ssh_key = chomp(each.value.result.key)
 }
 
 resource "linode_stackscript" "non_root_login_script" {

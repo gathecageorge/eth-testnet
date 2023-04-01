@@ -7,10 +7,8 @@ instance_ubuntu_password = ""
 # Group for all linodes deployed using this terraform for differentiation
 instance_group = "ef-foundation"
 
-# ssh key to be authorized on all linodes for user ubuntu
-access_ssh_keys = {
-  key1_label : "public key here"
-}
+# Github usernames to get ssh keys to be allowed ssh access to servers
+github_usernames = ["your_github_username to get keys ie https://github.com/myusername.keys", "another_username"]
 
 # global instances/machines to create, different configurations
 globalfederation = { count = 1, type = "g6-standard-4", image = "linode/ubuntu22.04", client = "globalfederation" }

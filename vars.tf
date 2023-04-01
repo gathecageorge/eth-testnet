@@ -16,10 +16,10 @@ variable "instance_group" {
   type        = string
 }
 
-# ssh keys to be authorized for user ubuntu access on all linodes
-variable "access_ssh_keys" {
-  description = "ssh keys to be authorized for user ubuntu access on all linodes"
-  type        = map(string)
+# Github usernames to get ssh keys to be allowed ssh access to servers
+variable "github_usernames" {
+  description = "Github usernames to get ssh keys to be allowed ssh access to servers"
+  type        = list(string)
 }
 
 # el servers
