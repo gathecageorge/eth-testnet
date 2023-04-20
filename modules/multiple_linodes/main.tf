@@ -1,7 +1,7 @@
 resource "linode_instance" "instances" {
   count = var.number_instances
 
-  label           = "${var.instance_label}${count.index}"
+  label           = "${var.instance_label}${format("%03d", count.index + 1)}"
   image           = var.instance_image
 
   # If dclocal then use global regions
