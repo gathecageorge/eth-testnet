@@ -26,7 +26,7 @@ resource "linode_instance" "instances" {
     [
       var.instance_group,
       "geth_geth${count.index % var.total_geth}",
-      "rw_${var.testnet}${var.testname}dclocal${count.index % var.total_dclocal}",
+      "rw_${var.testnet}${var.testname}dclocal${format("%03d", (count.index % var.total_dclocal) + 1)}",
       "${var.testname}",
       element(var.class_groups, count.index)
     ]
