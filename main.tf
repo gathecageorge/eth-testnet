@@ -24,7 +24,7 @@ resource "linode_stackscript" "non_root_login_script" {
 resource "linode_instance" "globalfederation_servers" {
   count = var.globalfederation.count
 
-  label           = "globalfederation${count.index}"
+  label           = "globalfederation${count.index + 1}"
   image           = var.globalfederation.image
   region          = element(var.dc_regions_global, count.index)
   type            = var.globalfederation.type
@@ -46,9 +46,9 @@ resource "linode_instance" "globalfederation_servers" {
 resource "linode_instance" "geth_servers" {
   count = var.geth.count
 
-  label           = "geth${count.index}"
+  label           = "geth${count.index + 1}"
   image           = var.geth.image
-  region          = element(var.dc_regions_global, count.index)
+  region          = "us-east"
   type            = var.geth.type
   root_pass       = var.instance_ubuntu_password
   authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
@@ -58,8 +58,8 @@ resource "linode_instance" "geth_servers" {
     "instance_ubuntu_password" = var.instance_ubuntu_password
   }
   
-  group = "rw_globalfederation${count.index % var.globalfederation.count}"
-  tags = [var.instance_group, "rw_globalfederation${count.index % var.globalfederation.count}"]
+  group = "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"
+  tags = [var.instance_group, "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"]
   private_ip       = true
   watchdog_enabled = true
   swap_size        = 512
