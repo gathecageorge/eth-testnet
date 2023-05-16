@@ -17,6 +17,15 @@ resource "linode_firewall" "globalfederation_firewalls" {
   }
 
   inbound {
+    label    = "allow-files-download"
+    action   = "ACCEPT"
+    protocol = "TCP"
+    ports    = "1111"
+    ipv4     = ["0.0.0.0/0"]
+    ipv6     = []
+  }
+
+  inbound {
     label    = "allow-http"
     action   = "ACCEPT"
     protocol = "TCP"
