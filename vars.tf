@@ -4,6 +4,20 @@ variable "token" {
   type        = string
 }
 
+# docker compose version
+variable "docker_compose_version" {
+  description = "docker compose version"
+  type        = string
+  default = "v2.15.1"
+}
+
+# docker network name
+variable "docker_network_name" {
+  description = "docker network name"
+  type        = string
+  default = "monitoring_network"
+}
+
 # ubuntu password to be set on linodes
 variable "instance_ubuntu_password" {
   description = "ubuntu password to be set on linodes"

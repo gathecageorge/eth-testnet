@@ -19,6 +19,9 @@ resource "linode_instance" "instances" {
   stackscript_id = var.stackscript_id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "${var.instance_label}${format("%03d", count.index + 1)}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
   group = var.clientname

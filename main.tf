@@ -34,6 +34,9 @@ resource "linode_instance" "globalfederation_servers" {
   stackscript_id = linode_stackscript.non_root_login_script.id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "globalfederation${count.index + 1}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
   group = "globalfederation"
@@ -56,6 +59,9 @@ resource "linode_instance" "geth_servers" {
   stackscript_id = linode_stackscript.non_root_login_script.id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "geth${count.index + 1}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
   group = "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"
@@ -173,6 +179,8 @@ module "multiple_linodes_instances" {
   total_globalfederation = var.globalfederation.count
 
   stackscript_id           = linode_stackscript.non_root_login_script.id
+  docker_compose_version   = var.docker_compose_version
+  docker_network_name      = var.docker_network_name
   instance_group           = var.instance_group
   instance_label           = each.key
   number_instances         = each.value.count
