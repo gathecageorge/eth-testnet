@@ -61,12 +61,12 @@ echo "done setting hostname" >> /steps.log
 
 # Set node exporter
 echo "setting node exporter" >> /steps.log
-docker container run -d --name node-exporter --log-driver json-file --log-opt tag="{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}" --restart unless-stopped --network $DOCKER_NETWORK_NAME --volume /etc/machine-id:/etc/machine-id:ro --volume /proc:/host/proc:ro --volume /sys:/host/sys:ro --volume /:/rootfs:ro --user "0:0" prom/node-exporter:latest --path.procfs="/host/proc" --path.rootfs="/rootfs" --path.sysfs="/host/sys" --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"
+docker container run -d --name node-exporter --log-driver json-file --log-opt tag="{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}|default" --restart unless-stopped --network $DOCKER_NETWORK_NAME --volume /etc/machine-id:/etc/machine-id:ro --volume /proc:/host/proc:ro --volume /sys:/host/sys:ro --volume /:/rootfs:ro --user "0:0" prom/node-exporter:latest --path.procfs="/host/proc" --path.rootfs="/rootfs" --path.sysfs="/host/sys" --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"
 echo "done setting node exporter" >> /steps.log
 
 # Set cadvisor
 echo "setting cadvisor" >> /steps.log
-docker container run -d --name cadvisor --log-driver json-file --log-opt tag="{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}" --restart unless-stopped --network $DOCKER_NETWORK_NAME --volume /etc/machine-id:/etc/machine-id:ro --volume /:/rootfs:ro --volume /var/run:/var/run:rw --volume /sys:/sys:ro --volume /var/lib/docker/:/var/lib/docker:ro --user "0:0" gcr.io/cadvisor/cadvisor:v0.47.1
+docker container run -d --name cadvisor --log-driver json-file --log-opt tag="{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}|default" --restart unless-stopped --network $DOCKER_NETWORK_NAME --volume /etc/machine-id:/etc/machine-id:ro --volume /:/rootfs:ro --volume /var/run:/var/run:rw --volume /sys:/sys:ro --volume /var/lib/docker/:/var/lib/docker:ro --user "0:0" gcr.io/cadvisor/cadvisor:v0.47.1
 echo "done setting cadvisor" >> /steps.log
 
 echo "finished" > /finished.log
