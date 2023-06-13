@@ -70,3 +70,5 @@ docker container run -d --name cadvisor --log-driver json-file --log-opt tag="{{
 echo "done setting cadvisor" >> /steps.log
 
 echo "finished" > /finished.log
+
+reboot
