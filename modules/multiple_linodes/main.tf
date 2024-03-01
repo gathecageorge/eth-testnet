@@ -1,7 +1,7 @@
 resource "linode_instance" "instances" {
   count = var.number_instances
 
-  label           = "${var.instance_label}${count.index}"
+  label           = "${var.instance_label}${format("%03d", count.index + 1)}"
   image           = var.instance_image
 
   # If dclocal then use global regions
@@ -19,14 +19,17 @@ resource "linode_instance" "instances" {
   stackscript_id = var.stackscript_id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "${var.instance_label}${format("%03d", count.index + 1)}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
   group = var.clientname
-  tags = (var.clientname == "dclocal") ? [var.instance_group, "rw_globalfederation${count.index % var.total_globalfederation}", "${var.testname}"] : (
+  tags = (var.clientname == "dclocal") ? [var.instance_group, "rw_globalfederation${(count.index % var.total_globalfederation) + 1}", "${var.testname}"] : (
     [
       var.instance_group,
-      "geth_geth${count.index % var.total_geth}",
-      "rw_${var.testnet}${var.testname}dclocal${count.index % var.total_dclocal}",
+      "geth_geth${(count.index % var.total_geth) + 1}",
+      "rw_${var.testnet}${var.testname}dclocal${format("%03d", (count.index % var.total_dclocal) + 1)}",
       "${var.testname}",
       element(var.class_groups, count.index)
     ]

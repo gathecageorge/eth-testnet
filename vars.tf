@@ -4,6 +4,20 @@ variable "token" {
   type        = string
 }
 
+# docker compose version
+variable "docker_compose_version" {
+  description = "docker compose version"
+  type        = string
+  default = "v2.15.1"
+}
+
+# docker network name
+variable "docker_network_name" {
+  description = "docker network name"
+  type        = string
+  default = "monitoring_network"
+}
+
 # ubuntu password to be set on linodes
 variable "instance_ubuntu_password" {
   description = "ubuntu password to be set on linodes"
@@ -16,10 +30,10 @@ variable "instance_group" {
   type        = string
 }
 
-# ssh keys to be authorized for user ubuntu access on all linodes
-variable "access_ssh_keys" {
-  description = "ssh keys to be authorized for user ubuntu access on all linodes"
-  type        = map(string)
+# Github usernames to get ssh keys to be allowed ssh access to servers
+variable "github_usernames" {
+  description = "Github usernames to get ssh keys to be allowed ssh access to servers"
+  type        = list(string)
 }
 
 # el servers
@@ -34,25 +48,25 @@ variable "globalfederation" {
   type        = map(string)
 }
 
-# Regions to distribute linodes to global shared
+# Regions to distribute linodes to global shared : Removed us-west as they dont have NVME Block storage
 variable "dc_regions_global" {
   description = "Regions to distribute linodes to global shared"
   type        = list(string)
-  default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
+  default     = ["us-east", "eu-west", "ap-west", "ca-central", "ap-southeast", "us-central", "us-southeast", "ap-south", "eu-central", "ap-northeast"]
 }
 
 # Regions to distribute linodes to group 1
 variable "dc_regions_group1" {
   description = "Regions to distribute linodes to group 1"
   type        = list(string)
-  default     = ["us-west", "eu-west", "ap-west", "ca-central", "ap-southeast"]
+  default     = ["us-east", "eu-west", "ap-west", "ca-central", "ap-southeast"]
 }
 
 # Regions to distribute linodes to group 2
 variable "dc_regions_group2" {
   description = "Regions to distribute linodes to group 2"
   type        = list(string)
-  default     = ["us-central", "us-southeast", "us-east", "ap-south", "eu-central", "ap-northeast"]
+  default     = ["us-central", "us-southeast", "ap-south", "eu-central", "ap-northeast"]
 }
 
 # Groups classifications of different sides

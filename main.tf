@@ -1,9 +1,16 @@
+# Get ssh keys from github
+data "external" "github_usernames_keys" {
+  for_each = toset(var.github_usernames)
+
+  program = ["python3", "githubkey.py", "${each.key}"]
+}
+
 # create ssh key to be used by all linodes root ssh
 resource "linode_sshkey" "ssh_access_keys" {
-  for_each = var.access_ssh_keys
+  for_each = data.external.github_usernames_keys
 
   label   = "${each.key}_ssh_access_key"
-  ssh_key = chomp(each.value)
+  ssh_key = chomp(each.value.result.key)
 }
 
 resource "linode_stackscript" "non_root_login_script" {
@@ -17,7 +24,7 @@ resource "linode_stackscript" "non_root_login_script" {
 resource "linode_instance" "globalfederation_servers" {
   count = var.globalfederation.count
 
-  label           = "globalfederation${count.index}"
+  label           = "globalfederation${count.index + 1}"
   image           = var.globalfederation.image
   region          = element(var.dc_regions_global, count.index)
   type            = var.globalfederation.type
@@ -27,6 +34,9 @@ resource "linode_instance" "globalfederation_servers" {
   stackscript_id = linode_stackscript.non_root_login_script.id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "globalfederation${count.index + 1}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
   group = "globalfederation"
@@ -39,9 +49,9 @@ resource "linode_instance" "globalfederation_servers" {
 resource "linode_instance" "geth_servers" {
   count = var.geth.count
 
-  label           = "geth${count.index}"
+  label           = "geth${count.index + 1}"
   image           = var.geth.image
-  region          = element(var.dc_regions_global, count.index)
+  region          = "us-east"
   type            = var.geth.type
   root_pass       = var.instance_ubuntu_password
   authorized_keys = [for key in linode_sshkey.ssh_access_keys : key.ssh_key]
@@ -49,10 +59,13 @@ resource "linode_instance" "geth_servers" {
   stackscript_id = linode_stackscript.non_root_login_script.id
   stackscript_data = {
     "instance_ubuntu_password" = var.instance_ubuntu_password
+    "hostname" = "geth${count.index + 1}"
+    "docker_compose_version" = var.docker_compose_version
+    "docker_network_name" = var.docker_network_name
   }
   
-  group = "rw_globalfederation${count.index % var.globalfederation.count}"
-  tags = [var.instance_group, "rw_globalfederation${count.index % var.globalfederation.count}"]
+  group = "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"
+  tags = [var.instance_group, "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"]
   private_ip       = true
   watchdog_enabled = true
   swap_size        = 512
@@ -166,6 +179,8 @@ module "multiple_linodes_instances" {
   total_globalfederation = var.globalfederation.count
 
   stackscript_id           = linode_stackscript.non_root_login_script.id
+  docker_compose_version   = var.docker_compose_version
+  docker_network_name      = var.docker_network_name
   instance_group           = var.instance_group
   instance_label           = each.key
   number_instances         = each.value.count

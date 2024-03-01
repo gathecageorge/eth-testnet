@@ -3,6 +3,16 @@ variable "number_instances" {
   type        = number
 }
 
+variable "docker_compose_version" {
+  description = "docker compose version"
+  type        = string
+}
+
+variable "docker_network_name" {
+  description = "docker network name"
+  type        = string
+}
+
 variable "total_geth" {
   description = "How many geth instances"
   type        = number
