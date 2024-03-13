@@ -39,7 +39,7 @@ resource "linode_instance" "globalfederation_servers" {
     "docker_network_name" = var.docker_network_name
   }
   
-  group = "globalfederation"
+  # group = "globalfederation"
   tags = [var.instance_group]
   private_ip       = true
   watchdog_enabled = true
@@ -64,7 +64,7 @@ resource "linode_instance" "geth_servers" {
     "docker_network_name" = var.docker_network_name
   }
   
-  group = "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"
+  # group = "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"
   tags = [var.instance_group, "rw_globalfederation${(count.index % var.globalfederation.count) + 1}"]
   private_ip       = true
   watchdog_enabled = true
